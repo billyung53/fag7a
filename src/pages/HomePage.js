@@ -1,11 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png';
 
 function HomePage() {
   return (
     <div className="container">
-      <h1>My React Website</h1>
-      <p>Welcome to my website! I'll build this step by step.</p>
+      <img src={logo} alt="Game Logo" style={{
+        height: '120px',
+        width: 'auto',
+        marginBottom: '20px',
+        filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))'
+      }} />
       
       <div style={{ marginTop: '30px', display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
         <Link to="/hello" style={{ 
