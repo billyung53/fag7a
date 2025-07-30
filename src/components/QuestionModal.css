@@ -76,6 +76,35 @@
   color: #e74c3c;
 }
 
+.error-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.error-container .error {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.retry-btn {
+  background: #1f4e96;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: #163a73;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(31, 78, 150, 0.3);
+}
+
 .question {
   font-size: 1.3rem;
   margin-bottom: 30px;

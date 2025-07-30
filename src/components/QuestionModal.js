@@ -8,9 +8,14 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [answers, setAnswers] = useState([]);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     if (isOpen && category && value) {
+      setLoading(true);
+      setError(null);
+      setRetryCount(0);
       fetchQuestion();
       setTimeLeft(30);
       setSelectedAnswer(null);
@@ -73,18 +78,53 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
     return apis[categoryName]?.[difficulty];
   };
 
-  const fetchQuestion = async () => {
+  const fetchQuestion = async (retryAttempt = 0) => {
     try {
       setLoading(true);
+      setError(null);
+      
       const difficulty = getDifficulty(value);
       const apiUrl = getApiUrl(category, difficulty);
       
       if (!apiUrl) {
-        throw new Error('API URL not found');
+        throw new Error('Invalid category or difficulty');
       }
 
-      const response = await fetch(apiUrl);
+      // Add a small delay to respect rate limits
+      if (retryAttempt > 0) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * retryAttempt));
+      }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch(apiUrl, {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+      
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('RATE_LIMITED');
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
       const data = await response.json();
+      
+      if (data.response_code === 1) {
+        throw new Error('No questions available for this category/difficulty');
+      } else if (data.response_code === 2) {
+        throw new Error('Invalid parameter in API request');
+      } else if (data.response_code === 3 || data.response_code === 4) {
+        throw new Error('RATE_LIMITED');
+      } else if (data.response_code !== 0) {
+        throw new Error(`API Error: Response code ${data.response_code}`);
+      }
       
       if (data.results && data.results.length > 0) {
         const questionData = data.results[0];
@@ -94,12 +134,37 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
         const allAnswers = [...questionData.incorrect_answers, questionData.correct_answer];
         const shuffledAnswers = allAnswers.sort(() => Math.random() - 0.5);
         setAnswers(shuffledAnswers);
+        setRetryCount(0);
       } else {
-        throw new Error('No questions found');
+        throw new Error('No questions returned from API');
       }
     } catch (error) {
       console.error('Failed to fetch question:', error);
-      setQuestion({ error: 'Failed to load question' });
+      
+      // Handle rate limiting with retry
+      if (error.message === 'RATE_LIMITED' && retryAttempt < 3) {
+        console.log(`Rate limited, retrying in ${(retryAttempt + 1) * 2} seconds...`);
+        setRetryCount(retryAttempt + 1);
+        setTimeout(() => {
+          fetchQuestion(retryAttempt + 1);
+        }, (retryAttempt + 1) * 2000);
+        return;
+      }
+      
+      // Handle network errors with retry
+      if ((error.name === 'AbortError' || error.message.includes('fetch')) && retryAttempt < 2) {
+        console.log(`Network error, retrying in ${(retryAttempt + 1)} seconds...`);
+        setRetryCount(retryAttempt + 1);
+        setTimeout(() => {
+          fetchQuestion(retryAttempt + 1);
+        }, (retryAttempt + 1) * 1000);
+        return;
+      }
+      
+      // Set error for display
+      setError(error.message === 'RATE_LIMITED' 
+        ? 'API rate limit reached. Please wait a moment and try again.' 
+        : error.message || 'Failed to load question. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -145,10 +210,20 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
         </div>
 
         {loading ? (
-          <div className="loading">Loading question...</div>
-        ) : question?.error ? (
-          <div className="error">{question.error}</div>
-        ) : (
+          <div className="loading">
+            {retryCount > 0 ? `Retrying... (Attempt ${retryCount + 1})` : 'Loading question...'}
+          </div>
+        ) : error ? (
+          <div className="error-container">
+            <div className="error">{error}</div>
+            <button 
+              className="retry-btn" 
+              onClick={() => fetchQuestion(0)}
+            >
+              Try Again
+            </button>
+          </div>
+        ) : question ? (
           <>
             <div className="question">
               {decodeHtml(question.question)}
@@ -186,6 +261,8 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
               </div>
             )}
           </>
+        ) : (
+          <div className="error">No question data available</div>
         )}
       </div>
     </div>

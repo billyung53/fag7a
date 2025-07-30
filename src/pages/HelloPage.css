@@ -1,3 +1,52 @@
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #ffd3ac;
+  border-radius: 15px;
+}
+
+.team-score {
+  text-align: center;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.team-score.active {
+  border-color: #FFF;
+  background: #ff6d4d;
+  transform: scale(1.05);
+}
+
+.team-score h3 {
+  margin: 0 0 10px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.team-score .score {
+  font-size: 2rem;
+  font-weight: 900;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo-center {
+  height: 80px;
+  width: auto;
+}
+
 .jeopardy-grid {
   max-width: 1000px;
   margin: 30px auto 0;
@@ -32,6 +81,23 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  .score-header {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .team-score h3 {
+    font-size: 1rem;
+  }
+  
+  .team-score .score {
+    font-size: 1.6rem;
+  }
+  
+  .logo-center {
+    height: 60px;
+  }
+  
   .jeopardy-grid {
     margin: 20px auto 0;
   }
@@ -50,6 +116,30 @@
 }
 
 @media (max-width: 480px) {
+  .score-header {
+    padding: 10px;
+    margin-bottom: 15px;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .team-score {
+    min-width: 100px;
+  }
+  
+  .team-score h3 {
+    font-size: 0.9rem;
+  }
+  
+  .team-score .score {
+    font-size: 1.4rem;
+  }
+  
+  .logo-center {
+    height: 50px;
+    order: -1;
+  }
+  
   .jeopardy-grid {
     margin: 15px auto 0;
   }
