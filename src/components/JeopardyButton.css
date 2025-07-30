@@ -1,0 +1,55 @@
+.jeopardy-button {
+  background: #fff;
+  color: #ff6d4d;
+  border: 2px solid #ff6d4d;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 15px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.jeopardy-button:hover:not(:disabled) {
+  background: #77b255;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
+}
+
+.jeopardy-button:active:not(:disabled) {
+  transform: translateY(0px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.jeopardy-button.used {
+  background: #2a2a2a;
+  color: #666;
+  border-color: #444;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .jeopardy-button {
+    font-size: 1rem;
+    padding: 12px 8px;
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .jeopardy-button {
+    font-size: 0.9rem;
+    padding: 10px 6px;
+    min-height: 45px;
+  }
+}

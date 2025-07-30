@@ -1,0 +1,76 @@
+.jeopardy-grid {
+  max-width: 1000px;
+  margin: 30px auto 0;
+  width: 100%;
+}
+
+.category-row, .value-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.category-header {
+  background: #ff6d4d;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  padding: 15px 8px;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .jeopardy-grid {
+    margin: 20px auto 0;
+  }
+  
+  .category-row, .value-row {
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  
+  .category-header {
+    font-size: 0.8rem;
+    padding: 12px 6px;
+    min-height: 50px;
+    letter-spacing: 0.3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .jeopardy-grid {
+    margin: 15px auto 0;
+  }
+  
+  .category-row, .value-row {
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  
+  .category-header {
+    font-size: 0.7rem;
+    padding: 10px 4px;
+    min-height: 45px;
+    letter-spacing: 0.2px;
+  }
+}
+
+@media (max-width: 320px) {
+  .category-header {
+    font-size: 0.6rem;
+    padding: 8px 2px;
+    min-height: 40px;
+  }
+}

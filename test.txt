@@ -1,0 +1,25 @@
+General Knowledge
+Easy: https://opentdb.com/api.php?amount=2&category=9&difficulty=easy&type=multiple
+Medium: https://opentdb.com/api.php?amount=2&category=9&difficulty=medium
+Hard: https://opentdb.com/api.php?amount=1&category=9&difficulty=hard
+
+
+Geography
+Easy: https://opentdb.com/api.php?amount=2&category=22&difficulty=easy
+Medium: https://opentdb.com/api.php?amount=2&category=22&difficulty=easy
+Hard: https://opentdb.com/api.php?amount=1&category=22&difficulty=hard
+
+Computers
+Easy: https://opentdb.com/api.php?amount=2&category=18&difficulty=easy
+Medium: https://opentdb.com/api.php?amount=2&category=18&difficulty=medium
+Hard: https://opentdb.com/api.php?amount=1&category=18&difficulty=hard
+
+Gaming
+Easy: https://opentdb.com/api.php?amount=2&category=15&difficulty=easy
+Medium: https://opentdb.com/api.php?amount=2&category=15&difficulty=medium
+Hard: https://opentdb.com/api.php?amount=1&category=15&difficulty=hard
+
+Random
+Easy: https://opentdb.com/api.php?amount=2&category=31&difficulty=easy
+Medium: https://opentdb.com/api.php?amount=2&category=28&difficulty=medium
+Hard: https://opentdb.com/api.php?amount=1&category=23&difficulty=hard
