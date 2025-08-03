@@ -170,6 +170,26 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
     }
   };
 
+  const getTimerClasses = (timeLeft) => {
+    let classes = 'timer';
+    
+    if (timeLeft > 20) {
+      classes += ' timer-green';
+    } else if (timeLeft > 10) {
+      classes += ' timer-yellow';
+    } else {
+      classes += ' timer-red';
+    }
+    
+    if (timeLeft <= 10 && timeLeft > 5) {
+      classes += ' timer-pulse';
+    } else if (timeLeft <= 5) {
+      classes += ' timer-urgent-pulse';
+    }
+    
+    return classes;
+  };
+
   const handleAnswerClick = (answer) => {
     if (selectedAnswer || showResult) return;
     
@@ -204,9 +224,12 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <span className="close-btn" onClick={onClose}>&times;</span>
         
+        <div className="timer-container">
+          <div className={getTimerClasses(timeLeft)}>{timeLeft}</div>
+        </div>
+        
         <div className="question-header">
-          <h3>{category} - ${value}</h3>
-          <div className="timer">{timeLeft}s</div>
+          <h3>{category}  {value}</h3>
         </div>
 
         {loading ? (

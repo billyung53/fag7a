@@ -2,9 +2,10 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-const server = http.createServer(app);
+server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: ["http://localhost:3000", "https://your-netlify-app.netlify.app"],
@@ -12,7 +13,169 @@ const io = socketIo(server, {
   }
 });
 
+// Supabase configuration
+const supabaseUrl = process.env.SUPABASE_URL || 'https://fvcfsnkhqxwenaqkngen.supabase.co';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2Y2ZzbmtocXh3ZW5hcWtuZ2VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxNTc0MzIsImV4cCI6MjA2OTczMzQzMn0.JAtGWJsVk-6Q5_zLtsN7QJpkjZxRCKmINbrVcKu-7Hw';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const BACKDOOR_PASSWORD = 'admin123';
+
 app.use(cors());
+app.use(express.json());
+
+
+
+
+
+// API endpoint to verify referral codes
+app.post('/verify-referral', async (req, res) => {
+  try {
+    const { code } = req.body;
+    console.log('Verifying referral code:', code);
+    
+    // Check backdoor first
+    if (code === BACKDOOR_PASSWORD) {
+      console.log('Backdoor password used');
+      return res.json({ valid: true, isBackdoor: true });
+    }
+    
+    console.log('Checking Supabase table "referal" for code:', code);
+    const { data, error } = await supabase
+      .from('referal') 
+      .select('*')
+      .eq('code', code)
+      .eq('is_active', true);
+
+    console.log('Supabase response - Data:', data, 'Error:', error);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ valid: false, error: 'Database error' });
+    }
+
+    if (data && data.length > 0) {
+      console.log('Valid referral code found:', data[0]);
+      
+      // Log the usage in referal_usage table
+      try {
+        const { data: usageData, error: usageError } = await supabase
+          .from('referal_usage')
+          .insert([
+            { 
+              code: code,
+              // created_at: new Date().toISOString()
+            }
+          ])
+          .select();
+        
+        if (usageError) {
+          console.error('Error logging referral usage:', usageError);
+          // Continue anyway, don't fail the authentication
+        } else {
+          console.log('Referral usage logged successfully:', usageData);
+        }
+      } catch (logError) {
+        console.error('Exception while logging referral usage:', logError);
+        // Continue anyway, don't fail the authentication
+      }
+      
+      return res.json({ valid: true, isBackdoor: false, referralData: data[0] });
+    } else {
+      console.log('No matching active referral code found');
+      return res.json({ valid: false });
+    }
+  } catch (error) {
+    console.error('Error verifying referral code:', error);
+    res.status(500).json({ valid: false, error: 'Server error' });
+  }
+});
+
+// API endpoint to get all categories
+app.get('/categories', async (req, res) => {
+  try {
+    console.log('Fetching all categories from Supabase table "categories"');
+    
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .order('id', { ascending: true }); // Optional: order by id
+
+    console.log('Supabase response - Data:', data, 'Error:', error);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: 'Database error', details: error.message });
+    }
+
+    console.log(`Successfully fetched ${data ? data.length : 0} categories`);
+    return res.json({ 
+      success: true, 
+      categories: data || [],
+      count: data ? data.length : 0
+    });
+    
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Server error', details: error.message });
+  }
+});
+
+// Testing/wake-up API endpoint
+app.get('/wake-up', async (req, res) => {
+  try {
+    console.log('Wake-up endpoint called - testing database connection');
+    
+    // Perform a simple database query to wake up the connection
+    const { data, error } = await supabase
+      .from('categories')
+      .select('id')
+      .limit(1);
+
+    if (error) {
+      console.error('Wake-up database test failed:', error);
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Database connection failed',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    console.log('Wake-up successful - database connection active');
+    return res.json({ 
+      success: true, 
+      message: 'Server and database are active',
+      timestamp: new Date().toISOString(),
+      status: 'awake'
+    });
+    
+  } catch (error) {
+    console.error('Wake-up endpoint error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during wake-up',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Game sessions storage (in memory)
 const gameSessions = new Map();

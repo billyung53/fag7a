@@ -39,11 +39,10 @@
   font-size: 2rem;
   font-weight: 900;
   font-family: 'Montserrat', sans-serif;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .logo-center {
-  height: 80px;
+  height: 130px;
   width: auto;
 }
 
