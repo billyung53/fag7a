@@ -16,7 +16,8 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3001/categories');
+        const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://fiveo5a.onrender.com';
+        const response = await fetch(`${BACKEND_URL}/categories`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

@@ -5,7 +5,7 @@ import JeopardyButton from '../components/JeopardyButton';
 import QuestionModal from '../components/QuestionModal';
 import './MultiplayerGame.css';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://fiveo5a.onrender.com';
 
 function MultiplayerGame() {
   const [socket, setSocket] = useState(null);

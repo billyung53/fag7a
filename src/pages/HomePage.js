@@ -19,7 +19,7 @@ function HomePage() {
   const [serverWaking, setServerWaking] = useState(true);
   const [wakeUpError, setWakeUpError] = useState('');
 
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://fiveo5a.onrender.com';
 
   // Wake up the server when component mounts
   useEffect(() => {
