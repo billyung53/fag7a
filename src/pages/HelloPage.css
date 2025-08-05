@@ -1,62 +1,100 @@
-.score-header {
+/* Main Game Layout */
+.game-layout {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  background: #ffd3ac;
-  border-radius: 15px;
+  align-items: center; /* Vertically center everything */
+  justify-content: center;
+  gap: 20px; /* Increased gap to accommodate larger grid */
+  margin: 10px auto;
+  max-width: 2000px; /* Increased to accommodate larger grid */
+  min-height: 80vh; /* Ensure vertical centering */
+}
+
+/* Hide game content on mobile portrait when rotation prompt is shown */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .game-layout {
+    display: none;
+  }
 }
 
 .team-score {
   text-align: center;
   color: white;
-  padding: 15px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  min-width: 120px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  min-width: 150px;
+  max-width: 200px;
+  align-self: center; /* Ensure team scores are centered vertically */
 }
 
-.team-score.active {
+.team-score .score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.team-score.active .score-circle {
   border-color: #FFF;
   background: #ff6d4d;
   transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(255, 109, 77, 0.4);
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1.05) translateY(0); }
+  50% { transform: scale(1.05) translateY(-10px); }
 }
 
 .team-score h3 {
-  margin: 0 0 10px 0;
+  margin: 0;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  word-break: break-word;
+  color: #333;
 }
 
-.team-score .score {
-  font-size: 2rem;
-  font-weight: 900;
-  font-family: 'Montserrat', sans-serif;
+.team-score.left {
+  order: 1;
 }
 
-.logo-center {
-  height: 130px;
-  width: auto;
+.team-score.right {
+  order: 3;
 }
 
 .jeopardy-grid {
-  max-width: 1000px;
-  margin: 30px auto 0;
-  width: 100%;
+  order: 2;
+  flex: 1;
+  max-width: 1000px; /* Significantly increased for better readability */
+  min-width: 900px; /* Set minimum width to ensure it doesn't get too cramped */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center the grid vertically */
 }
 
 .category-row, .value-row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 10px; /* Increased gap for better spacing */
+  margin-bottom: 8px; /* Increased margin for better separation */
+  width: 100%;
 }
 
 .category-header {
@@ -64,41 +102,65 @@
   color: #fff;
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Slightly increased font size for better readability */
   text-align: center;
-  padding: 15px 8px;
+  padding: 15px 16px; /* Increased horizontal padding */
   border: 2px solid #fff;
   border-radius: 8px;
-  min-height: 60px;
+  min-height: 100px;
+  max-height: 100px; /* Fixed height for consistency */
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  box-sizing: border-box; /* Include padding and border in width calculation */
+  overflow: hidden; /* Prevent text overflow */
+  word-break: break-word;
+  hyphens: auto;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .score-header {
+  .game-layout {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    min-height: auto; /* Remove min-height constraint on mobile */
+    max-width: 100%; /* Full width on mobile */
+  }
+  
+  .team-score {
+    min-width: 120px;
+    max-width: 300px;
     padding: 15px;
-    margin-bottom: 20px;
+    gap: 10px;
   }
   
-  .team-score h3 {
-    font-size: 1rem;
+  .team-score .score-circle {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
   }
   
-  .team-score .score {
-    font-size: 1.6rem;
-  }
-  
-  .logo-center {
-    height: 60px;
+  .team-score.left {
+    order: 1;
   }
   
   .jeopardy-grid {
-    margin: 20px auto 0;
+    order: 2;
+    width: 100%;
+    max-width: 100%; /* Full width on mobile */
+  }
+  
+  .team-score.right {
+    order: 3;
+  }
+  
+  .team-score h3 {
+    font-size: 1.1rem;
   }
   
   .category-row, .value-row {
@@ -109,38 +171,32 @@
   .category-header {
     font-size: 0.8rem;
     padding: 12px 6px;
-    min-height: 50px;
+    min-height: 90px;
+    max-height: 90px; /* Match button height */
     letter-spacing: 0.3px;
   }
 }
 
 @media (max-width: 480px) {
-  .score-header {
-    padding: 10px;
-    margin-bottom: 15px;
-    flex-direction: column;
+  .game-layout {
     gap: 15px;
+    margin: 10px auto;
   }
   
   .team-score {
     min-width: 100px;
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  .team-score .score-circle {
+    width: 70px;
+    height: 70px;
+    font-size: 1.6rem;
   }
   
   .team-score h3 {
-    font-size: 0.9rem;
-  }
-  
-  .team-score .score {
-    font-size: 1.4rem;
-  }
-  
-  .logo-center {
-    height: 50px;
-    order: -1;
-  }
-  
-  .jeopardy-grid {
-    margin: 15px auto 0;
+    font-size: 1rem;
   }
   
   .category-row, .value-row {
@@ -152,6 +208,7 @@
     font-size: 0.7rem;
     padding: 10px 4px;
     min-height: 45px;
+    max-height: 45px; /* Match button height */
     letter-spacing: 0.2px;
   }
 }
@@ -160,6 +217,143 @@
   .category-header {
     font-size: 0.6rem;
     padding: 8px 2px;
-    min-height: 40px;
+    min-height: 90px;
+  }
+}
+
+/* Mobile Landscape Optimization - Forces content to fit on screen */
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+  /* Reduced scaling for better readability */
+  .container {
+    transform: scale(0.9); /* Reduced from 0.8 for better readability */
+    transform-origin: top center;
+    width: 111%; /* Compensate for scale */
+    margin: 0 auto;
+    padding: 10px;
+  }
+  
+  .game-layout {
+    gap: 10px; /* Increased gap */
+    margin: 10px auto;
+    flex-direction: row; /* Keep side-by-side in landscape */
+    max-width: 1600px; /* Increased for larger grid */
+  }
+  
+  .jeopardy-grid {
+    min-width: 600px; /* Ensure minimum width in landscape */
+  }
+  
+  .team-score {
+    min-width: 120px;
+    max-width: 150px;
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  .team-score .score-circle {
+    width: 70px;
+    height: 70px;
+    font-size: 1.5rem;
+  }
+  
+  .team-score h3 {
+    font-size: 1rem;
+  }
+  
+  .category-header {
+    font-size: 0.7rem;
+    padding: 8px 4px;
+    min-height: 55px;
+    max-height: 55px; /* Consistent height */
+  }
+}
+
+/* Extra small mobile landscape - more aggressive scaling */
+@media screen and (max-width: 768px) and (orientation: landscape) and (max-height: 500px) {
+  .container {
+    transform: scale(0.75); /* Slightly reduced scaling */
+    width: 133%; /* Compensate for smaller scale */
+    padding: 5px;
+  }
+  
+  .game-layout {
+    gap: 20px; /* Increased gap */
+    margin: 5px auto;
+  }
+  
+  .jeopardy-grid {
+    min-width: 800px; /* Ensure minimum width */
+  }
+  
+  .team-score {
+    min-width: 100px;
+    max-width: 120px;
+    padding: 10px;
+    gap: 6px;
+  }
+  
+  .team-score .score-circle {
+    width: 60px;
+    height: 60px;
+    font-size: 1.3rem;
+  }
+  
+  .team-score h3 {
+    font-size: 0.9rem;
+  }
+  
+  .category-row, .value-row {
+    gap: 3px;
+    margin-bottom: 1px;
+  }
+  
+  .category-header {
+    font-size: 0.6rem;
+    padding: 6px 2px;
+    min-height: 30px;
+    max-height: 30px; /* Consistent height */
+  }
+}
+
+/* Very small mobile landscape - maximum compression */
+@media screen and (max-width: 480px) and (orientation: landscape) and (max-height: 400px) {
+  .container {
+    transform: scale(0.5);
+    width: 200%; /* Compensate for very small scale */
+    padding: 0;
+  }
+  
+  .game-layout {
+    gap: 10px;
+    margin: 0 auto;
+  }
+  
+  .team-score {
+    min-width: 80px;
+    max-width: 100px;
+    padding: 8px;
+    gap: 4px;
+  }
+  
+  .team-score .score-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 1.1rem;
+  }
+  
+  .team-score h3 {
+    font-size: 0.8rem;
+  }
+  
+  .category-row, .value-row {
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+  
+  .category-header {
+    font-size: 0.5rem;
+    padding: 4px 1px;
+    min-height: 25px;
+    max-height: 25px; /* Consistent height */
   }
 }

@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './QuestionModal.css';
 
-function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
-  const [question, setQuestion] = useState(null);
-  const [loading, setLoading] = useState(true);
+function QuestionModal({ isOpen, onClose, category, value, onComplete, question, answers, correctAnswer }) {
+  const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
-  const [answers, setAnswers] = useState([]);
   const [error, setError] = useState(null);
-  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
-    if (isOpen && category && value) {
-      setLoading(true);
+    if (isOpen) {
+      // No need to fetch question as it's passed as props
+      setLoading(false);
       setError(null);
-      setRetryCount(0);
-      fetchQuestion();
       setTimeLeft(30);
       setSelectedAnswer(null);
       setShowResult(false);
     }
-  }, [isOpen, category, value]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen && timeLeft > 0 && !selectedAnswer) {
@@ -39,6 +36,28 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
       return () => clearInterval(timer);
     }
   }, [isOpen, timeLeft, selectedAnswer]);
+
+  // Prevent body scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, [isOpen]);
 
   const getDifficulty = (value) => {
     if (value <= 200) return 'easy';
@@ -196,7 +215,7 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
     setSelectedAnswer(answer);
     setShowResult(true);
     
-    const isCorrect = answer === question.correct_answer;
+    const isCorrect = answer === correctAnswer;
     setTimeout(() => {
       onComplete(isCorrect, answer);
       onClose();
@@ -219,7 +238,7 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
 
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <span className="close-btn" onClick={onClose}>&times;</span>
@@ -229,27 +248,13 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
         </div>
         
         <div className="question-header">
-          <h3>{category}  {value}</h3>
+          <h3>{category} - {value}</h3>
         </div>
 
-        {loading ? (
-          <div className="loading">
-            {retryCount > 0 ? `Retrying... (Attempt ${retryCount + 1})` : 'Loading question...'}
-          </div>
-        ) : error ? (
-          <div className="error-container">
-            <div className="error">{error}</div>
-            <button 
-              className="retry-btn" 
-              onClick={() => fetchQuestion(0)}
-            >
-              Try Again
-            </button>
-          </div>
-        ) : question ? (
+        {question ? (
           <>
             <div className="question">
-              {decodeHtml(question.question)}
+              {decodeHtml(question)}
             </div>
             
             <div className="answers">
@@ -258,7 +263,7 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
                   key={index}
                   className={`answer-btn ${
                     showResult 
-                      ? answer === question.correct_answer 
+                      ? answer === correctAnswer 
                         ? 'correct' 
                         : answer === selectedAnswer 
                           ? 'incorrect' 
@@ -275,7 +280,7 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
 
             {showResult && (
               <div className="result">
-                {selectedAnswer === question.correct_answer 
+                {selectedAnswer === correctAnswer 
                   ? 'Correct!' 
                   : selectedAnswer 
                     ? 'Incorrect!' 
@@ -290,6 +295,9 @@ function QuestionModal({ isOpen, onClose, category, value, onComplete }) {
       </div>
     </div>
   );
+
+  // Render modal using portal to ensure it's at the top level
+  return createPortal(modalContent, document.body);
 }
 
 export default QuestionModal;

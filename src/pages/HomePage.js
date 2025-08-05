@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import logo from '../assets/logo.png';
-import nine from '../assets/9.png';
-import ten from '../assets/10.png';
 import jumpingAnimation from '../assets/jumpingNigga.json';
 import CategorySelector from '../components/CategorySelector';
 

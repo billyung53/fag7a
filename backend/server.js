@@ -98,6 +98,7 @@ app.get('/categories', async (req, res) => {
     const { data, error } = await supabase
       .from('categories')
       .select('*')
+      .eq('is_active', true)
       .order('id', { ascending: true }); // Optional: order by id
 
     console.log('Supabase response - Data:', data, 'Error:', error);
@@ -119,6 +120,319 @@ app.get('/categories', async (req, res) => {
     res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+// API endpoint to get specific categories by IDs
+app.get('/categories/by-ids', async (req, res) => {
+  try {
+    const { ids } = req.query;
+    
+    if (!ids) {
+      return res.status(400).json({ 
+        error: 'Missing required parameter', 
+        message: 'Please provide "ids" parameter (comma-separated list of category IDs)' 
+      });
+    }
+
+    // Parse the comma-separated IDs and convert to numbers
+    let categoryIds;
+    try {
+      categoryIds = ids.split(',').map(id => {
+        const numId = parseInt(id.trim());
+        if (isNaN(numId)) {
+          throw new Error(`Invalid ID: ${id}`);
+        }
+        return numId;
+      });
+    } catch (parseError) {
+      return res.status(400).json({ 
+        error: 'Invalid ID format', 
+        message: 'IDs must be numeric values separated by commas (e.g., "1,2,3")' 
+      });
+    }
+
+    console.log(`Fetching categories with IDs: [${categoryIds.join(', ')}]`);
+    
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .in('id', categoryIds)
+      .eq('is_active', true)
+      .order('id', { ascending: true });
+
+    // console.log('Supabase response - Data:', data, 'Error:', error);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: 'Database error', details: error.message });
+    }
+
+    const foundIds = data ? data.map(cat => cat.id) : [];
+    const missingIds = categoryIds.filter(id => !foundIds.includes(id));
+
+    const catType = data ? data.map(cat => cat.type) : [];
+    console.log('Category Type:', catType);
+
+    // Helper function to add delay between API calls
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    // Process categories and fetch questions for API categories
+    for (const category of data) {
+      switch (category.type) {
+        case 'api':
+          // Process API categories - fetch questions from Open Trivia DB
+          console.log(`API category: ${category.title}, api_id: ${category.api_id}`);
+          
+          try {
+            // First, try to get all 5 questions in a single call for better performance
+            const singleUrl = `https://opentdb.com/api.php?amount=5&category=${category.api_id}&type=multiple`;
+            console.log(`Fetching 5 questions from: ${singleUrl}`);
+            
+            let response = await fetch(singleUrl);
+            let triviaData = await response.json();
+            
+            if (triviaData.response_code === 0 && triviaData.results && triviaData.results.length >= 5) {
+              // Success with single call - much faster!
+              category.questions = triviaData.results.slice(0, 5);
+              console.log(`✅ Successfully fetched ${category.questions.length} questions for ${category.title} in single call`);
+            } else if (triviaData.response_code === 1) {
+              // Not enough questions available for 5, try fallback approach
+              console.log(`⚠️  Not enough questions for 5 in ${category.title}, trying individual difficulty calls...`);
+              
+              const apiUrls = [
+                `https://opentdb.com/api.php?amount=2&category=${category.api_id}&difficulty=easy&type=multiple`,
+                `https://opentdb.com/api.php?amount=2&category=${category.api_id}&difficulty=medium&type=multiple`,
+                `https://opentdb.com/api.php?amount=1&category=${category.api_id}&difficulty=hard&type=multiple`
+              ];
+
+              category.questions = [];
+
+              for (let i = 0; i < apiUrls.length; i++) {
+                const url = apiUrls[i];
+                console.log(`Fetching questions from: ${url}`);
+                
+                try {
+                  response = await fetch(url);
+                  triviaData = await response.json();
+                  
+                  if (triviaData.response_code === 0 && triviaData.results) {
+                    category.questions.push(...triviaData.results);
+                    console.log(`Successfully fetched ${triviaData.results.length} questions for ${category.title}`);
+                  } else if (triviaData.response_code === 1) {
+                    console.warn(`⚠️  No questions available for this difficulty in ${category.title}`);
+                  } else if (triviaData.response_code === 5) {
+                    console.warn(`⚠️  Rate limit hit for ${category.title}, waiting 6 seconds...`);
+                    await delay(6000); // Wait 6 seconds for rate limit
+                    // Retry the same request
+                    response = await fetch(url);
+                    triviaData = await response.json();
+                    if (triviaData.response_code === 0 && triviaData.results) {
+                      category.questions.push(...triviaData.results);
+                      console.log(`✅ Retry successful: fetched ${triviaData.results.length} questions for ${category.title}`);
+                    }
+                  } else {
+                    console.warn(`API returned error code ${triviaData.response_code} for ${category.title}:`, triviaData);
+                  }
+                } catch (fetchError) {
+                  console.error(`Error fetching from ${url}:`, fetchError.message);
+                }
+
+                // Wait 6 seconds between requests to respect rate limit
+                if (i < apiUrls.length - 1) {
+                  console.log('Waiting 6 seconds before next API call to respect rate limit...');
+                  await delay(6000);
+                }
+              }
+            } else if (triviaData.response_code === 5) {
+              console.warn(`⚠️  Rate limit hit on initial call for ${category.title}, waiting and retrying...`);
+              await delay(6000);
+              // Retry the single call
+              response = await fetch(singleUrl);
+              triviaData = await response.json();
+              if (triviaData.response_code === 0 && triviaData.results) {
+                category.questions = triviaData.results.slice(0, 5);
+                console.log(`✅ Retry successful: fetched ${category.questions.length} questions for ${category.title}`);
+              } else {
+                // If retry fails, fall back to individual calls
+                console.log(`⚠️  Retry failed, falling back to individual difficulty calls...`);
+                category.questions = [];
+                // ... (fallback logic would go here if needed)
+              }
+            } else {
+              console.warn(`API returned error code ${triviaData.response_code} for ${category.title}:`, triviaData);
+              category.questions = [];
+            }
+
+            console.log(`Total questions fetched for ${category.title}: ${category.questions.length}`);
+            
+          } catch (error) {
+            console.error(`Error processing API category ${category.title}:`, error);
+            category.questions = []; // Set empty array if failed
+          }
+          break;
+          
+        case 'custom':
+          // Process custom categories - fetch questions from Supabase 'questions' table
+          console.log(`Custom category: ${category.title}, ID: ${category.id}`);
+          
+          try {
+            // Fetch 2 easy, 2 medium, and 1 hard question from the database
+            const difficulties = [
+              { difficulty: 'easy', count: 2 },
+              { difficulty: 'medium', count: 2 },
+              { difficulty: 'hard', count: 1 }
+            ];
+
+            category.questions = [];
+
+            for (const diffLevel of difficulties) {
+              console.log(`Fetching ${diffLevel.count} ${diffLevel.difficulty} questions for category ${category.id}`);
+              
+              const { data: questions, error } = await supabase
+                .from('questions')
+                .select('*')
+                .eq('category', category.id)
+                .eq('difficulty', diffLevel.difficulty)
+                .limit(diffLevel.count * 3) // Get more than needed to allow for random selection
+                .order('id', { ascending: false }); // Random-ish order
+
+              if (error) {
+                console.error(`Error fetching ${diffLevel.difficulty} questions for category ${category.id}:`, error);
+                continue;
+              }
+
+              if (questions && questions.length > 0) {
+                // Randomly select the required number of questions
+                const shuffled = questions.sort(() => Math.random() - 0.5);
+                const selectedQuestions = shuffled.slice(0, diffLevel.count);
+                
+                // Transform database format to match API format
+                const transformedQuestions = selectedQuestions.map(q => ({
+                  question: q.title,
+                  correct_answer: q.correct,
+                  incorrect_answers: [q.incorrect1, q.incorrect2, q.incorrect3].filter(ans => ans && ans.trim() !== ''),
+                  difficulty: q.difficulty,
+                  category: category.title,
+                  type: q.type || 'multiple'
+                }));
+
+                category.questions.push(...transformedQuestions);
+                console.log(`✅ Successfully fetched ${selectedQuestions.length} ${diffLevel.difficulty} questions for ${category.title}`);
+              } else {
+                console.warn(`⚠️  No ${diffLevel.difficulty} questions found for category ${category.id}`);
+              }
+            }
+
+            console.log(`Total custom questions fetched for ${category.title}: ${category.questions.length}`);
+            
+          } catch (error) {
+            console.error(`Error processing custom category ${category.title}:`, error);
+            category.questions = []; // Set empty array if failed
+          }
+          break;
+          
+        default:
+          console.log(`Unknown type: ${category.type}`);
+      }
+
+      // Add delay between categories to respect rate limiting
+      await delay(6000); // 6 seconds between categories to be safe
+    }
+
+    // Generate final summary of all fetched questions
+    console.log('\n==================== FINAL QUESTION FETCH SUMMARY ====================');
+    let totalQuestions = 0;
+    let apiCategoriesProcessed = 0;
+    let customCategories = 0;
+    let failedCategories = 0;
+
+    data.forEach(category => {
+      if (category.type === 'api') {
+        apiCategoriesProcessed++;
+        const questionCount = category.questions ? category.questions.length : 0;
+        totalQuestions += questionCount;
+        
+        if (questionCount === 0) {
+          failedCategories++;
+          console.log(`❌ ${category.title} (API ID: ${category.api_id}): 0 questions (FAILED)`);
+        } else {
+          console.log(`✅ ${category.title} (API ID: ${category.api_id}): ${questionCount} questions`);
+        }
+      } else if (category.type === 'custom') {
+        customCategories++;
+        const questionCount = category.questions ? category.questions.length : 0;
+        totalQuestions += questionCount;
+        
+        if (questionCount === 0) {
+          failedCategories++;
+          console.log(`❌ ${category.title} (Custom ID: ${category.id}): 0 questions (FAILED)`);
+        } else {
+          console.log(`📝 ${category.title} (Custom ID: ${category.id}): ${questionCount} questions`);
+        }
+      }
+    });
+
+    console.log('─'.repeat(70));
+    console.log(`📊 SUMMARY:`);
+    console.log(`   • Total categories processed: ${data.length}`);
+    console.log(`   • API categories: ${apiCategoriesProcessed}`);
+    console.log(`   • Custom categories: ${customCategories}`);
+    console.log(`   • Failed fetches: ${failedCategories}`);
+    console.log(`   • Total questions fetched: ${totalQuestions}`);
+    console.log(`   • Expected questions per category: 5`);
+    console.log(`   • Success rate: ${data.length > 0 ? Math.round(((data.length - failedCategories) / data.length) * 100) : 0}%`);
+    console.log('='.repeat(70));
+    console.log('');
+
+    
+    console.log(`Successfully fetched ${data ? data.length : 0} categories`);
+    if (missingIds.length > 0) {
+      console.log(`Warning: Categories not found for IDs: [${missingIds.join(', ')}]`);
+    }
+    
+    return res.json({ 
+      success: true, 
+      categories: data || [],
+      count: data ? data.length : 0,
+      catTypes: catType,
+      // requestedIds: categoryIds,
+      // foundIds: foundIds,
+      // missingIds: missingIds
+    });
+    
+  } catch (error) {
+    console.error('Error fetching categories by IDs:', error);
+    res.status(500).json({ error: 'Server error', details: error.message });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Testing/wake-up API endpoint
 app.get('/wake-up', async (req, res) => {

@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import HelloPage from './pages/HelloPage';
 import MultiplayerGame from './pages/MultiplayerGame';
 import TeamPage from './pages/TeamPage';
+import LoadingScreenTest from './pages/LoadingScreenTest';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/hello" element={<HelloPage />} />
           <Route path="/multiplayer" element={<MultiplayerGame />} />
           <Route path="/join" element={<TeamPage />} />
+          <Route path="/loading-test" element={<LoadingScreenTest />} />
         </Routes>
       </div>
     </Router>

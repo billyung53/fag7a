@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Lottie from 'lottie-react';
 import './CategorySelector.css';
 import fireAnimation from '../assets/fire.json';
+import jumpingAnimation from '../assets/jumpingNigga.json';
 
 function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesChange, teamNames }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -121,7 +122,14 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
         {/* Loading State */}
         {loading && (
           <div className="loading-state">
-            <p>Loading categories...</p>
+            <Lottie 
+              animationData={jumpingAnimation} 
+              className="loading-animation"
+              loop={true}
+              autoplay={true}
+              width={60}
+              height={60}
+            />
           </div>
         )}
 
@@ -234,6 +242,7 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
             <label htmlFor="team1">Team 1 Name</label>
             <input
               id="team1"
+              maxLength={8}
               type="text"
               placeholder="Enter team 1 name..."
               value={localTeamNames.team1}
@@ -245,6 +254,7 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
             <label htmlFor="team2">Team 2 Name</label>
             <input
               id="team2"
+              maxLength={8}
               type="text"
               placeholder="Enter team 2 name..."
               value={localTeamNames.team2}

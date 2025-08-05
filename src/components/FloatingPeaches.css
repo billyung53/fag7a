@@ -1,0 +1,74 @@
+.floating-peaches-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Don't interfere with game interactions */
+  z-index: -1; /* Behind all game content */
+  overflow: hidden;
+}
+
+.floating-peach {
+  position: absolute;
+  top: -100px; /* Start above the screen */
+  opacity: 0.7;
+  animation: floatDown linear forwards;
+  pointer-events: none;
+}
+
+.floating-peach img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: gentleRotate 3s ease-in-out infinite alternate;
+}
+
+@keyframes floatDown {
+  0% {
+    top: -100px;
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  10% {
+    opacity: 0.7;
+    transform: translateY(0) scale(1);
+  }
+  90% {
+    opacity: 0.7;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    top: 100vh;
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+}
+
+@keyframes gentleRotate {
+  0% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
+}
+
+/* Reduce animation intensity on mobile for performance */
+@media (max-width: 768px) {
+  .floating-peach {
+    opacity: 0.5;
+  }
+  
+  .floating-peach img {
+    animation: none; /* Disable rotation on mobile */
+  }
+}
+
+/* Pause animations when user is not focused on tab (performance optimization) */
+@media (prefers-reduced-motion: reduce) {
+  .floating-peach {
+    animation: none;
+    display: none;
+  }
+}

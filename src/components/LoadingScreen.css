@@ -1,0 +1,293 @@
+/* LoadingScreen.css */
+.loading-screen {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.loading-content {
+  text-align: center;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Main Animation */
+.main-animation {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.jumping-animation {
+  width: 160px;
+  height: 160px;
+}
+
+/* Loading Text */
+.loading-text-container {
+  margin-bottom: 2.5rem;
+  height: 80px;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.loading-static-text {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e74c3c;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.loading-text {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+  text-align: center;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.cursor {
+  font-weight: 300;
+  color: #667eea;
+  animation: blink 1s infinite;
+}
+
+.cursor.hidden {
+  opacity: 0;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Progress Bar */
+.progress-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.progress-bar {
+  width: 500px;
+  height: 12px;
+  background-color: rgba(108, 117, 125, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: #e74c3c;
+  border-radius: 10px;
+  transition: width 4.5s ease;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+.progress-text {
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .loading-content {
+    padding: 1rem;
+    max-width: 95%;
+  }
+  
+  .main-animation {
+    margin-bottom: 1.5rem;
+  }
+  
+  .jumping-animation {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .loading-static-text {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .loading-text-container {
+    height: 70px;
+    margin-bottom: 2rem;
+  }
+  
+  .loading-text {
+    font-size: 1.2rem;
+  }
+  
+  .bouncing-peach {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .progress-bar {
+    width: 300px;
+  }
+  
+  .progress-container {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-content {
+    padding: 1rem 0.5rem;
+  }
+  
+  .main-animation {
+    margin-bottom: 1rem;
+  }
+  
+  .jumping-animation {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .loading-static-text {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .loading-text-container {
+    height: 60px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .loading-text {
+    font-size: 1.1rem;
+    padding: 0 0.5rem;
+    line-height: 1.3;
+  }
+  
+  .bouncing-peach {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .progress-bar {
+    width: 250px;
+    height: 10px;
+  }
+  
+  .progress-container {
+    margin-bottom: 1rem;
+  }
+  
+  .progress-text {
+    font-size: 0.9rem;
+  }
+  
+  .dot {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .loading-static-text {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .loading-text {
+    font-size: 1rem;
+  }
+  
+  .jumping-animation {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .progress-bar {
+    width: 200px;
+  }
+}
+
+/* High contrast and accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .bouncing-peach,
+  .jumping-animation,
+  .cursor,
+  .dot,
+  .progress-fill {
+    animation: none;
+  }
+  
+  .cursor {
+    opacity: 1;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .loading-text {
+    color: #1e1e1e;
+  }
+  
+  .progress-text {
+    color: #1e1e1e;
+  }
+}
+
+/* Loading screen fade in/out */
+.loading-screen {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

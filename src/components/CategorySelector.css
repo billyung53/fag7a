@@ -446,8 +446,10 @@
 /* Loading State */
 .loading-state {
   text-align: center;
+  align-items: center;
   padding: 40px 20px;
   color: #666;
+  max-width: 150px;
 }
 
 .loading-state p {
