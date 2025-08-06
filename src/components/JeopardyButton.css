@@ -9,8 +9,8 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-height: 60px;
-  max-height: 60px; /* Fixed height to match category headers */
+  min-height: 90px;
+  max-height: 90px; /* Fixed height to match category headers */
   display: flex;
   align-items: center;
   justify-content: center;

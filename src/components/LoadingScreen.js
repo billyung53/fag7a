@@ -19,6 +19,8 @@ const LoadingScreen = ({ isVisible = true, progress = 0 }) => {
     "Having a philosophical debate about answers",
     "Checking if our facts are still facts.",
     "Asking Google if we're doing this right",
+    "Waiting for Flipperachy to write a song about us",
+    "We're just wrapping up GTA 6",
   ];
 
   // Typewriter effect
@@ -38,9 +40,14 @@ const LoadingScreen = ({ isVisible = true, progress = 0 }) => {
         setIsTyping(false);
         clearInterval(typewriterInterval);
         
-        // Wait 5 seconds before switching to next text
+        // Wait 5 seconds before switching to next text (randomized)
         setTimeout(() => {
-          setCurrentTextIndex((prev) => (prev + 1) % loadingTexts.length);
+          let nextIndex;
+          do {
+            nextIndex = Math.floor(Math.random() * loadingTexts.length);
+          } while (nextIndex === currentTextIndex && loadingTexts.length > 1); // Avoid repeating the same text
+          
+          setCurrentTextIndex(nextIndex);
         }, 5000);
       }
     }, 80); // Typing speed
@@ -77,7 +84,7 @@ const LoadingScreen = ({ isVisible = true, progress = 0 }) => {
           <div className="progress-bar">
             <div 
               className="progress-fill" 
-              style={{ width: `${progress}%` }}
+              style={{ width: `${Math.round(progress)}%` }}
             ></div>
           </div>
           <div className="progress-text">{Math.round(progress)}%</div>

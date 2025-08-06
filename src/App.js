@@ -10,7 +10,7 @@ import LoadingScreenTest from './pages/LoadingScreenTest';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="App" style={{ backgroundColor: '#ffd3ac' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/hello" element={<HelloPage />} />

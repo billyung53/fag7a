@@ -267,16 +267,6 @@
   font-size: 1.1rem;
 }
 
-.question-text {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 12px;
-  margin: 20px 0;
-  font-size: 1.1rem;
-  line-height: 1.4;
-  color: #333;
-  border-left: 4px solid #2d6cdf;
-}
 
 .answer-options {
   display: flex;
