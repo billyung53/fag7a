@@ -13,7 +13,7 @@
   text-align: center;
   width: var(--grid-item-min-width);
   height: calc(var(--button-height-lg) * 1.5);
-  min-width: calc(var((--grid-item-min-width) * 1.5));
+  min-width: calc(var(--grid-item-min-width) * 1.5);
   max-width: calc(var(--grid-item-min-width) * 1.5);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
