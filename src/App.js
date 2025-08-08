@@ -7,6 +7,7 @@ import HelloPage from './pages/HelloPage';
 import LoadingScreenTest from './pages/LoadingScreenTest';
 import DeviceInfoWrapper from './components/DeviceInfoPanel/DeviceInfoWrapper';
 import useDynamicCSS from './hooks/useDynamicCSS';
+import Authentication from './pages/Authentication';
 
 function App() {
   // Apply dynamic CSS based on device info globally
@@ -19,6 +20,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/hello" element={<HelloPage />} />
           <Route path="/loading-test" element={<LoadingScreenTest />} />
+          <Route path="/authentication" element={<Authentication />} />
+
         </Routes>
         
         {/* Development Tools - Only shows when enabled in devConfig */}
