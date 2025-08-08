@@ -1,3 +1,4 @@
+// components/HelloPage/HelloPage.js
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import JeopardyButton from '../components/JeopardyButton';
@@ -5,6 +6,10 @@ import RotationPrompt from '../components/RotationPrompt';
 import FloatingPeaches from '../components/FloatingPeaches';
 import LoadingScreen from '../components/LoadingScreen';
 import useOrientation from '../hooks/useOrientation';
+import TeamScorePanel from '../components/HelloPage/TeamScorePanel';
+import CategorySelection from '../components/HelloPage/CategorySelection';
+import ValueSelection from '../components/HelloPage/ValueSelection';
+import QuestionDisplay from '../components/HelloPage/QuestionDisplay';
 import './HelloPage.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://fiveo5a.onrender.com';
@@ -15,19 +20,18 @@ function HelloPage() {
   const { isPortrait, isMobile } = useOrientation();
   
   const [usedButtons, setUsedButtons] = useState(new Set());
-  const [showModal, setShowModal] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
   const [team1Score, setTeam1Score] = useState(0);
   const [team2Score, setTeam2Score] = useState(0);
-  const [currentTeam, setCurrentTeam] = useState(1); // 1 or 2
+  const [currentTeam, setCurrentTeam] = useState(1);
   
   // New state for 3-step process
-  const [gameStep, setGameStep] = useState(1); // 1: category, 2: value, 3: question
+  const [gameStep, setGameStep] = useState(1);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
   const [selectedValue, setSelectedValue] = useState(null);
   const [selectedValueIndex, setSelectedValueIndex] = useState(null);
   
-  // Question display state (replaces modal)
+  // Question display state
+  const [currentQuestion, setCurrentQuestion] = useState(null);
   const [timeLeft, setTimeLeft] = useState(30);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -37,8 +41,9 @@ function HelloPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // Show rotation prompt for mobile devices in portrait orientation
   const showRotationPrompt = isMobile && isPortrait;
+
+  const values = [100, 200, 300, 400, 500];
 
   // Console log the passed data
   useEffect(() => {
@@ -49,33 +54,29 @@ function HelloPage() {
   useEffect(() => {
     const fetchCategoriesByIds = async () => {
       if (selectedCategories && selectedCategories.length > 0 && !hasFetchedRef.current) {
-        hasFetchedRef.current = true; // Mark as fetched to prevent duplicates
+        hasFetchedRef.current = true;
         setIsLoading(true);
         setLoadingProgress(0);
         
         try {
-          // Simulate progress updates - slower and more gradual
           const progressInterval = setInterval(() => {
             setLoadingProgress(prev => {
               if (prev >= 85) {
                 clearInterval(progressInterval);
                 return prev;
               }
-              return prev + Math.random() * 4; // Slower increment (0-5% instead of 0-15%)
+              return prev + Math.random() * 4;
             });
-          }, 500); // Update every 1 second instead of 300ms
+          }, 500);
 
-          // Extract just the ID values from the category objects
           const idsParam = selectedCategories.map(category => category.id).join(',');
           console.log("idparams", idsParam);
           
           const response = await fetch(`${BACKEND_URL}/categories/by-ids?ids=${idsParam}`);
           const result = await response.json();
           
-          // Complete the progress
           setLoadingProgress(100);
           
-          // Wait a moment to show 100% before hiding loading
           setTimeout(() => {
             setApiResults(result || []);
             setIsLoading(false);
@@ -92,7 +93,7 @@ function HelloPage() {
           }
         } catch (error) {
           console.error('Error fetching categories:', error);
-          hasFetchedRef.current = false; // Reset on error to allow retry
+          hasFetchedRef.current = false;
           setIsLoading(false);
         }
       }
@@ -100,16 +101,6 @@ function HelloPage() {
 
     fetchCategoriesByIds();
   }, [selectedCategories]);
-
-  const categories = [
-    'General Knowledge',
-    'Geography', 
-    'Computers',
-    'Gaming',
-    'Random'
-  ];
-
-  const values = [100, 200, 300, 400, 500];
 
   // Step 1: Handle category selection
   const handleCategorySelect = (categoryIndex) => {
@@ -126,7 +117,6 @@ function HelloPage() {
     setSelectedValue(value);
     setSelectedValueIndex(valueIndex);
     
-    // Get the actual question data from the organized questions
     const questionData = questionsData[selectedCategoryIndex]?.[valueIndex];
     
     if (!questionData) {
@@ -138,27 +128,16 @@ function HelloPage() {
       ...questionData,
       categoryIndex: selectedCategoryIndex,
       valueIndex: valueIndex,
-      // Combine correct and incorrect answers and shuffle them
       allAnswers: [questionData.correct_answer, ...questionData.incorrect_answers].sort(() => Math.random() - 0.5)
     });
     
-    // Debug logging
     console.log('Question Data:', questionData);
     console.log('All Answers:', [questionData.correct_answer, ...questionData.incorrect_answers]);
     
-    // Initialize question display state
     setTimeLeft(30);
     setSelectedAnswer(null);
     setShowResult(false);
     setGameStep(3);
-  };
-
-  const handleButtonClick = (value, categoryIndex, valueIndex) => {
-    // This is now handled by the new step-based system
-    // Keeping for compatibility but routing to value selection
-    if (gameStep === 2) {
-      handleValueSelect(value, valueIndex);
-    }
   };
 
   // Timer effect for question step
@@ -202,18 +181,10 @@ function HelloPage() {
     }, 2000);
   };
 
-  // Decode HTML entities
-  const decodeHtml = (html) => {
-    const txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
-  };
-
   const handleQuestionComplete = (isCorrect, selectedAnswer) => {
     const buttonId = `${currentQuestion.categoryIndex}-${currentQuestion.valueIndex}`;
     setUsedButtons(prev => new Set([...prev, buttonId]));
     
-    // Add score if correct
     if (isCorrect) {
       if (currentTeam === 1) {
         setTeam1Score(prev => prev + currentQuestion.value);
@@ -222,10 +193,8 @@ function HelloPage() {
       }
     }
     
-    // Switch to the other team
     setCurrentTeam(prev => prev === 1 ? 2 : 1);
     
-    // Reset the game steps for next turn
     setGameStep(1);
     setSelectedCategoryIndex(null);
     setSelectedValue(null);
@@ -242,19 +211,6 @@ function HelloPage() {
     if (selectedAnswer) {
       console.log(`Selected: ${selectedAnswer}`);
     }
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setCurrentQuestion(null);
-    // Reset steps when modal is closed
-    setGameStep(1);
-    setSelectedCategoryIndex(null);
-    setSelectedValue(null);
-    setSelectedValueIndex(null);
-    setTimeLeft(30);
-    setSelectedAnswer(null);
-    setShowResult(false);
   };
 
   // Helper function to go back a step
@@ -279,7 +235,6 @@ function HelloPage() {
   };
 
   const categoryTitles = apiResults.categories?.map(cat => cat.title) || [];
-  const ApiIDs = apiResults.categories?.map(cat => cat.api_id) || [];
 
   // Organize questions by category and value
   const organizeQuestions = () => {
@@ -291,9 +246,8 @@ function HelloPage() {
       organizedQuestions[categoryIndex] = {};
       
       if (category.questions && category.questions.length > 0) {
-        // Assign questions to value slots (0-4 corresponding to $100-$500)
         category.questions.forEach((question, questionIndex) => {
-          if (questionIndex < 5) { // Only use first 5 questions
+          if (questionIndex < 5) {
             organizedQuestions[categoryIndex][questionIndex] = {
               ...question,
               value: values[questionIndex],
@@ -309,164 +263,64 @@ function HelloPage() {
 
   const questionsData = organizeQuestions();
 
-  console.log('API IDs:', ApiIDs);
-  console.log('Organized Questions:', questionsData);
-
-  
-
   return (
     <div className="container">
-      {/* Show Loading Screen OR Main Content */}
       {isLoading ? (
         <LoadingScreen isVisible={isLoading} progress={loadingProgress} />
       ) : (
         <>
-          {/* Floating Peaches Background Animation */}
           <FloatingPeaches />
           
-          {/* Rotation Prompt for Mobile Portrait */}
           {showRotationPrompt && <RotationPrompt />}
           
-          {/* Main Game Layout */}
           <div className="game-layout">
-            {/* Left Team Score - Always Visible */}
-            <div className={`team-score left ${currentTeam === 1 ? 'active' : ''}`}>
-              <div className="score-circle">{team1Score}</div>
-              <h3>{teamNames?.team1}</h3>
-            </div>
+            <TeamScorePanel 
+              team="left"
+              teamName={teamNames?.team1}
+              score={team1Score}
+              isActive={currentTeam === 1}
+            />
             
-            {/* Jeopardy Grid - Changes based on step */}
-            <div className="jeopardy-grid">              
-
-              {/* Step 1: Category Selection */}
+            <div className="jeopardy-grid">
               {gameStep === 1 && (
-                <div className="category-row">
-                  {categoryTitles.map((category, index) => (
-                    <div 
-                      key={index} 
-                      className="category-header clickable"
-                      onClick={() => handleCategorySelect(index)}
-                    >
-                      <div className="category-title">{category}</div>
-                      <div className="category-dots">
-                        {values.map((_, valueIndex) => (
-                          <div 
-                            key={valueIndex}
-                            className={`category-dot ${isButtonUsed(index, valueIndex) ? 'used' : ''}`}
-                          ></div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <CategorySelection 
+                  categoryTitles={categoryTitles}
+                  values={values}
+                  isButtonUsed={isButtonUsed}
+                  onCategorySelect={handleCategorySelect}
+                />
               )}
 
-              {/* Step 2: Value Selection */}
               {gameStep === 2 && selectedCategoryIndex !== null && (
-                <>
-                  {/* Back Button */}
-                  <div className="back-button-container">
-                    <button className="back-button" onClick={handleBackStep}>
-                      Back
-                    </button>
-                  </div>
-                  
-                  {/* Show selected category */}
-                  <div className="selected-category-display">
-                    <div className="category-header selected">
-                      <div className="category-title">{categoryTitles[selectedCategoryIndex]}</div>
-                      <div className="category-dots">
-                        {values.map((_, valueIndex) => (
-                          <div 
-                            key={valueIndex}
-                            className={`category-dot ${isButtonUsed(selectedCategoryIndex, valueIndex) ? 'used' : ''}`}
-                          ></div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Show value buttons for selected category */}
-                  <div className="value-row">
-                    {values.map((value, valueIndex) => (
-                      <JeopardyButton
-                        key={`${selectedCategoryIndex}-${valueIndex}`}
-                        value={value}
-                        onClick={() => handleValueSelect(value, valueIndex)}
-                        isUsed={isButtonUsed(selectedCategoryIndex, valueIndex)}
-                        hasQuestion={!!questionsData[selectedCategoryIndex]?.[valueIndex]}
-                      />
-                    ))}
-                  </div>
-                </>
+                <ValueSelection 
+                  selectedCategoryIndex={selectedCategoryIndex}
+                  categoryTitle={categoryTitles[selectedCategoryIndex]}
+                  values={values}
+                  isButtonUsed={isButtonUsed}
+                  questionsData={questionsData}
+                  onValueSelect={handleValueSelect}
+                  onBackStep={handleBackStep}
+                  JeopardyButton={JeopardyButton}
+                />
               )}
 
-              {/* Step 3: Question Display - Inline */}
               {gameStep === 3 && currentQuestion && (
-                <div className="question-display-container">
-                  {/* Timer */}
-                  <div className="timer-container">
-                    <div className={`question-timer ${timeLeft <= 10 ? 'timer-warning' : ''} ${timeLeft <= 5 ? 'timer-urgent' : ''}`}>
-                      {timeLeft}
-                    </div>
-                  </div>
-                  
-                  {/* Question Header */}
-                  <div className="question-header">
-                    <h3>{currentQuestion.categoryTitle} - {currentQuestion.value}</h3>
-                  </div>
-
-                  {/* Question Text */}
-                  <div className="question">
-                    {decodeHtml(currentQuestion.question)}
-                  </div>
-                  
-                  {/* Answer Buttons */}
-                  <div className="answers">
-                    {currentQuestion.allAnswers && currentQuestion.allAnswers.length > 0 ? (
-                      currentQuestion.allAnswers.map((answer, index) => (
-                        <button
-                          key={index}
-                          className={`answer-btn ${
-                            showResult 
-                              ? answer === currentQuestion.correct_answer 
-                                ? 'correct' 
-                                : answer === selectedAnswer 
-                                  ? 'incorrect' 
-                                  : ''
-                              : ''
-                          }`}
-                          onClick={() => handleAnswerClick(answer)}
-                          disabled={showResult}
-                        >
-                          {decodeHtml(answer)}
-                        </button>
-                      ))
-                    ) : (
-                      <div style={{color: 'red', gridColumn: '1 / -1'}}>No answers available</div>
-                    )}
-                  </div>
-
-                  {/* Result Display */}
-                  {/* {showResult && (
-                    // <div className="result">
-                    //   {selectedAnswer === currentQuestion.correct_answer 
-                    //     ? 'Correct!' 
-                    //     : selectedAnswer 
-                    //       ? 'Incorrect!' 
-                    //       : 'Time\'s up!'
-                    //   }
-                    // </div>
-                  )} */}
-                </div>
+                <QuestionDisplay 
+                  currentQuestion={currentQuestion}
+                  timeLeft={timeLeft}
+                  selectedAnswer={selectedAnswer}
+                  showResult={showResult}
+                  onAnswerClick={handleAnswerClick}
+                />
               )}
             </div>
             
-            {/* Right Team Score - Always Visible */}
-            <div className={`team-score right ${currentTeam === 2 ? 'active' : ''}`}>
-              <div className="score-circle">{team2Score}</div>
-              <h3>{teamNames?.team2}</h3>
-            </div>
+            <TeamScorePanel 
+              team="right"
+              teamName={teamNames?.team2}
+              score={team2Score}
+              isActive={currentTeam === 2}
+            />
           </div>
         </>
       )}

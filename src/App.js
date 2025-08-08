@@ -6,6 +6,7 @@ import HelloPage from './pages/HelloPage';
 import MultiplayerGame from './pages/MultiplayerGame';
 import TeamPage from './pages/TeamPage';
 import LoadingScreenTest from './pages/LoadingScreenTest';
+import DeviceInfoWrapper from './components/DeviceInfoPanel/DeviceInfoWrapper';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
           <Route path="/join" element={<TeamPage />} />
           <Route path="/loading-test" element={<LoadingScreenTest />} />
         </Routes>
+        
+        {/* Development Tools - Only shows when enabled in devConfig */}
+        <DeviceInfoWrapper />
       </div>
     </Router>
   );
