@@ -1,14 +1,7 @@
 .App {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
-  width: 100vw;
-  height: 100vh;
-  max-width: var(--safe-area-width, 100vw);
-  max-height: var(--safe-area-height, 100vh);
   background-color: #ffd3ac;
-  background-size: 400% 400%;
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
   overflow: hidden;
   position: fixed;
@@ -18,26 +11,15 @@
 
 body {
   background-color: #ffd3ac;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100vw;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
 }
 
-.container {
-  width: 100%;
-  height: 100%;
-  max-width: var(--safe-area-width, 100vw);
-  max-height: var(--safe-area-height, 100vh);
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  overflow: hidden;
-  position: relative;
-  padding: 20px 15px 30px 15px;
-  box-sizing: border-box;
+.test {
+  
 }
 
 
@@ -54,83 +36,4 @@ p {
   height: auto;
   margin-bottom: 20px;
   border-radius: 8px;
-}
-
-/* Mobile First Responsive Design */
-@media (max-width: 768px) {
-  .App {
-    padding: 15px 8px 30px 8px;
-  }
-  
-  .container {
-    padding: 15px 12px 20px 12px;
-    margin: 0 5px;
-  }
-  
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
-  
-  p {
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-  
-  .logo {
-    max-width: 150px;
-    margin-bottom: 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .App {
-    padding: 10px 5px 20px 5px;
-  }
-  
-  .container {
-    padding: 12px 10px 15px 10px;
-    margin: 0 2px;
-    border-radius: 8px;
-  }
-  
-  h1 {
-    font-size: 1.3rem;
-    margin-bottom: 12px;
-  }
-  
-  p {
-    font-size: 0.85rem;
-    line-height: 1.4;
-  }
-  
-  .logo {
-    max-width: 120px;
-    margin-bottom: 12px;
-  }
-}
-
-@media (max-width: 320px) {
-  .App {
-    padding: 8px 3px 15px 3px;
-  }
-  
-  .container {
-    padding: 10px 8px 12px 8px;
-    margin: 0 1px;
-  }
-  
-  h1 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    font-size: 0.8rem;
-  }
-  
-  .logo {
-    max-width: 100px;
-    margin-bottom: 10px;
-  }
 }
