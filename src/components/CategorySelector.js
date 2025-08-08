@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Lottie from 'lottie-react';
 import './CategorySelector.css';
 import fireAnimation from '../assets/fire.json';
-import jumpingAnimation from '../assets/jumpingNigga.json';
 import useDeviceInfo from '../hooks/useDeviceInfo';
 import useDynamicCSS from '../hooks/useDynamicCSS';
 
@@ -39,7 +38,8 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
             .map(cat => ({
               id: cat.id.toString(), // Convert to string for consistency
               name: cat.title,
-              image: cat.images || '/images/default.jpg' // Use default image if none provided
+              image: cat.images || '/images/default.jpg', // Use default image if none provided
+              lang: cat.lang || 'en' // Default to English if no language specified
             }));
           
           setCategories(mappedCategories);
@@ -57,11 +57,19 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
     fetchCategories();
   }, []);
 
-  // Filter categories based on search term
-  const filteredCategories = useMemo(() => {
-    return categories.filter(category =>
+  // Filter and group categories by language
+  const { englishCategories, arabicCategories } = useMemo(() => {
+    const filtered = categories.filter(category =>
       category.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    
+    const english = filtered.filter(cat => cat.lang === 'en' || !cat.lang); // Default to English if no lang
+    const arabic = filtered.filter(cat => cat.lang === 'ar');
+    
+    return {
+      englishCategories: english,
+      arabicCategories: arabic
+    };
   }, [searchTerm, categories]);
 
   const handleCategoryClick = (category) => {
@@ -109,7 +117,7 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
   if (step === 'categories') {
     return (
       <div className="category-selector">
-        <div className="category-header-start">
+        {/* <div className="category-header-start">
           <h3>
             {selectedCategories.length === 5 
               ? "Ready to go! 🎉" 
@@ -118,24 +126,33 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
                 : `Choose ${5 - selectedCategories.length} More Categor${5 - selectedCategories.length === 1 ? 'y' : 'ies'}`
             }
           </h3>
-          {selectedCategories.length === 5 && (
-            <button className="next-btn" onClick={handleNextToTeams}>
-              Next
-            </button>
-          )}
-        </div>
+        </div> */}
 
-        {/* Loading State */}
+        {/* Loading State with Skeleton */}
         {loading && (
           <div className="loading-state">
-            <Lottie 
-              animationData={jumpingAnimation} 
-              className="loading-animation"
-              loop={true}
-              autoplay={true}
-              width={60}
-              height={60}
-            />
+            <div className="skeleton-section">
+              <div className="skeleton-title"></div>
+              <div className="skeleton-categories-horizontal">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-name"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="skeleton-section">
+              <div className="skeleton-title"></div>
+              <div className="skeleton-categories-horizontal">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-name"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
@@ -180,41 +197,95 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
               </div>
             )}
 
-            {/* Categories Grid */}
+            {/* Categories with Language Sections */}
             <div className="categories-container">
-              <div className="categories-scroll">
-                {filteredCategories.map((category) => (
-                  <div
-                    key={category.id}
-                    className={`category-card ${isSelected(category) ? 'selected' : ''} ${isDisabled(category) ? 'disabled' : ''}`}
-                    onClick={() => !isDisabled(category) && handleCategoryClick(category)}
-                  >
-                    <div className="category-image">
-                      <img 
-                        src={category.image} 
-                        alt={category.name}
-                        onError={(e) => {
-                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjA0ZjMwIiBvcGFjaXR5PSIwLjIiLz4KPHN2ZyB4PSIzNSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmMDRmMzAiIHN0cm9rZS13aWR0aD0iMiI+CjxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgcng9IjIiIHJ5PSIyIi8+CjxjaXJjbGUgY3g9Ijg5IiBjeT0iOSIgcj0iMiIvPgo8cGF0aCBkPSJtOSAyMS0xLjUtMS41TDEyIDEyIi8+Cjwvc3ZnPgo8L3N2Zz4K';
-                        }}
-                      />
-                      {isSelected(category) && (
-                        <div className="selected-overlay">
-                          <div className="checkmark">✓</div>
+              {/* English Categories Section */}
+              {englishCategories.length > 0 && (
+                <div className="language-section">
+                  <h4 className="section-title">English</h4>
+                  <div className="categories-horizontal-scroll">
+                    {englishCategories.map((category) => (
+                      <div
+                        key={category.id}
+                        className={`category-card ${isSelected(category) ? 'selected' : ''} ${isDisabled(category) ? 'disabled' : ''}`}
+                        onClick={() => !isDisabled(category) && handleCategoryClick(category)}
+                      >
+                        <div className="category-image">
+                          <img 
+                            src={category.image} 
+                            alt={category.name}
+                            onError={(e) => {
+                              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjA0ZjMwIiBvcGFjaXR5PSIwLjIiLz4KPHN2ZyB4PSIzNSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmMDRmMzAiIHN0cm9rZS13aWR0aD0iMiI+CjxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgcng9IjIiIHJ5PSIyIi8+CjxjaXJjbGUgY3g9Ijg5IiBjeT0iOSIgcj0iMiIvPgo8cGF0aCBkPSJtOSAyMS0xLjUtMS41TDEyIDEyIi8+Cjwvc3ZnPgo8L3N2Zz4K';
+                            }}
+                          />
+                          {isSelected(category) && (
+                            <div className="selected-overlay">
+                              <div className="checkmark">✓</div>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="category-name">{category.name}</div>
+                        <div className="category-name">{category.name}</div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+
+              {/* Arabic Categories Section */}
+              {arabicCategories.length > 0 && (
+                <div className="language-section">
+                  <h4 className="section-title">العربية</h4>
+                  <div className="categories-horizontal-scroll">
+                    {arabicCategories.map((category) => (
+                      <div
+                        key={category.id}
+                        className={`category-card ${isSelected(category) ? 'selected' : ''} ${isDisabled(category) ? 'disabled' : ''}`}
+                        onClick={() => !isDisabled(category) && handleCategoryClick(category)}
+                      >
+                        <div className="category-image">
+                          <img 
+                            src={category.image} 
+                            alt={category.name}
+                            onError={(e) => {
+                              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjA0ZjMwIiBvcGFjaXR5PSIwLjIiLz4KPHN2ZyB4PSIzNSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmMDRmMzAiIHN0cm9rZS13aWR0aD0iMiI+CjxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgcng9IjIiIHJ5PSIyIi8+CjxjaXJjbGUgY3g9Ijg5IiBjeT0iOSIgcj0iMiIvPgo8cGF0aCBkPSJtOSAyMS0xLjUtMS41TDEyIDEyIi8+Cjwvc3ZnPgo8L3N2Zz4K';
+                            }}
+                          />
+                          {isSelected(category) && (
+                            <div className="selected-overlay">
+                              <div className="checkmark">✓</div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="category-name">{category.name}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {filteredCategories.length === 0 && !loading && (
+            {(englishCategories.length === 0 && arabicCategories.length === 0) && !loading && (
               <div className="no-results">
                 <p>No categories found for "{searchTerm}"</p>
               </div>
             )}
           </>
+        )}
+
+        {/* Bottom CTA Button */}
+        {!loading && !error && (
+          <div className="cta-container">
+            <button 
+              className={`cta-button ${selectedCategories.length === 5 ? 'active' : 'disabled'}`}
+              onClick={handleNextToTeams}
+              disabled={selectedCategories.length !== 5}
+            >
+              {selectedCategories.length === 5 
+                ? "Continue to Team Setup →" 
+                : `Select ${5 - selectedCategories.length} more categor${5 - selectedCategories.length === 1 ? 'y' : 'ies'}`
+              }
+            </button>
+          </div>
         )}
       </div>
     );
@@ -305,7 +376,7 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
           </div>
           <div className="summary-section">
             <div className="summary-teams">
-              <span className="team-name-selector">{teamNames?.team1 || localTeamNames.team1}</span>
+              <span className="team-name-summary">{teamNames?.team1 || localTeamNames.team1}</span>
               <div className="vs-container">
                 <Lottie 
                   animationData={fireAnimation} 
@@ -314,7 +385,7 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
                   autoplay={true}
                 />
               </div>
-              <span className="team-name">{teamNames?.team2 || localTeamNames.team2}</span>
+              <span className="team-name-summary">{teamNames?.team2 || localTeamNames.team2}</span>
             </div>
           </div>
         </div>

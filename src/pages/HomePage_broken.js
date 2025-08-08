@@ -24,6 +24,16 @@ function HomePage() {
   const [serverWaking, setServerWaking] = useState(true);
   const [wakeUpError, setWakeUpError] = useState('');
   const [showRandomPrompt, setShowRandomPrompt] = useState(false);
+  const [topButtonHovered, setTopButtonHovered] = useState(false);
+  const [bottomButtonHovered, setBottomButtonHovered] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [teamNames, setTeamNames] = useState({ team1: '', team2: '' });
+  const [serverWaking, setServerWaking] = useState(true);
+  const [wakeUpError, setWakeUpError] = useState('');
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://fiveo5a.onrender.com';
 
@@ -77,20 +87,25 @@ function HomePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: password }),
+        body: JSON.stringify({ code: password.toLowerCase() }),
       });
 
       const data = await response.json();
       
-      if (response.ok && data.valid) {
+      if (data.valid) {
         setIsAuthenticated(true);
         setError('');
+        // You can store referral data if needed
+        if (data.referralData) {
+          console.log('Referral data:', data.referralData);
+        }
       } else {
-        setError(data.message || 'Invalid referral code. Try again!');
+        setError('Invalid referral code. Please try again.');
+        setPassword('');
       }
     } catch (error) {
-      console.error('Authentication error:', error);
-      setError('Connection error. Please try again.');
+      console.error('Error verifying referral code:', error);
+      setError('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -100,33 +115,11 @@ function HomePage() {
     setSelectedCategories(categories);
   };
 
-  const handleTeamNamesChange = (newTeamNames) => {
-    setTeamNames(newTeamNames);
+  const handleTeamNamesChange = (names) => {
+    setTeamNames(names);
   };
 
-  const handleClosePrompt = () => {
-    setShowRandomPrompt(false);
-  };
-
-  const canStartGame = selectedCategories.length > 0 && 
-    (teamNames.team1.trim() !== '' || teamNames.team2.trim() !== '');
-
-  // Authentication check
-  useEffect(() => {
-    const checkAuth = () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const authParam = urlParams.get('auth');
-      
-      if (authParam === 'true') {
-        setIsAuthenticated(true);
-        setServerWaking(false);
-      } else {
-        setIsAuthenticated(false);
-      }
-    };
-    
-    checkAuth();
-  }, []);
+  const canStartGame = selectedCategories.length === 5 && teamNames.team1 && teamNames.team2;
 
   // If not authenticated, show password screen
   if (!isAuthenticated) {
@@ -214,12 +207,22 @@ function HomePage() {
       {/* Logo Section */}
       <section className="logo-section">
         <img src={logo} alt="Game Logo" className="logo" />
-
+        <h1 className="title">
+          We're Closing, But You Can Still Play!
+        </h1>
+        <p className="subtitle">
+          If you know where to find the Questions, enter here! 🎮
+        </p>
       </section>
 
       {/* Category Selection Section */}
       <section className="category-section">
-
+        <div className="category-header">
+          <h2 className="section-title">Choose Your Challenge</h2>
+          <p className="section-subtitle">
+            Select categories and start your trivia adventure
+          </p>
+        </div>
         
         <CategorySelector 
           selectedCategories={selectedCategories}

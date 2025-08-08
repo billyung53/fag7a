@@ -72,7 +72,7 @@ function HomePage() {
     setError('');
     
     try {
-      const response = await fetch(`${BACKEND_URL}/verify-referral`, {
+      const response = await fetch(`${BACKEND_URL}/validate-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -214,12 +214,16 @@ function HomePage() {
       {/* Logo Section */}
       <section className="logo-section">
         <img src={logo} alt="Game Logo" className="logo" />
-
       </section>
 
       {/* Category Selection Section */}
       <section className="category-section">
-
+        <div className="category-header">
+          <h2 className="section-title">Choose Your Challenge</h2>
+          <p className="section-subtitle">
+            Select categories and start your trivia adventure
+          </p>
+        </div>
         
         <CategorySelector 
           selectedCategories={selectedCategories}

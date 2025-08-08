@@ -32,7 +32,6 @@ app.post('/verify-referral', async (req, res) => {
   try {
     const { code } = req.body;
     console.log('Verifying referral code:', code);
-    
     // Check backdoor first
     if (code === BACKDOOR_PASSWORD) {
       console.log('Backdoor password used');
@@ -164,7 +163,7 @@ app.get('/categories/by-ids', async (req, res) => {
     
     const { data, error } = await supabase
       .from('categories')
-      .select('id, title, type, api_id, description, is_active, created_at, updated_at')
+      .select('id, title, type, api_id, is_active, created_at, lang')
       .in('id', categoryIds)
       .eq('is_active', true)
       .order('id', { ascending: true });
