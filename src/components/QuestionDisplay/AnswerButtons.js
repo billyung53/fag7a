@@ -1,5 +1,6 @@
-// components/HelloPage/AnswerButtons.js
+// components/QuestionDisplay/AnswerButtons.js
 import React from 'react';
+import './AnswerButtons.css';
 
 function AnswerButtons({ 
   answers, 
@@ -16,12 +17,12 @@ function AnswerButtons({
   };
 
   return (
-    <div className="answers">
+    <div className="answer-buttons-container">
       {answers && answers.length > 0 ? (
         answers.map((answer, index) => (
           <button
             key={index}
-            className={`answer-btn ${
+            className={`answer-button ${
               showResult 
                 ? answer === correctAnswer 
                   ? 'correct' 
@@ -37,10 +38,10 @@ function AnswerButtons({
           </button>
         ))
       ) : (
-        <div style={{color: 'red', gridColumn: '1 / -1'}}>No answers available</div>
+        <div className="no-answers">No answers available</div>
       )}
     </div>
   );
 }
 
-export default AnswerButtons;
+export default React.memo(AnswerButtons);

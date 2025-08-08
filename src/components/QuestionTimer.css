@@ -1,0 +1,59 @@
+/* QuestionTimer.css - Dynamic Timer Component */
+.timer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+}
+
+.question-timer {
+  width: calc(var(--font-size-xlarge) * 2.5);
+  height: calc(var(--font-size-xlarge) * 2.5);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-large);
+  font-weight: bold;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  border: calc(var(--space-xs) / 2) solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.question-timer.timer-warning {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  animation: pulse-warning 1s infinite;
+}
+
+.question-timer.timer-urgent {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  animation: pulse-urgent 0.5s infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+  }
+}
+
+@keyframes pulse-urgent {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
+  }
+}
+
+/* No media queries needed - all sizing handled by dynamic CSS variables */

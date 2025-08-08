@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import peachImage from '../assets/peach.png';
+import peachImage from '../../assets/peach.png'; // Adjust the path as necessary
 import './FloatingPeaches.css';
 
 function FloatingPeaches() {

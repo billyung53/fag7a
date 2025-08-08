@@ -1,0 +1,110 @@
+/* AnswerButtons.css - Dynamic Answer Buttons */
+.answer-buttons-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.answer-button {
+  padding: var(--padding-md);
+  border: calc(var(--space-xs) / 2) solid #F04F30;
+  border-radius: var(--border-radius);
+  background: rgba(74, 144, 226, 0.1);
+  color: #F04F30;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: var(--button-height-lg);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.answer-button:hover:not(:disabled) {
+  background: rgba(240, 79, 48, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(240, 79, 48, 0.3);
+}
+
+.answer-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.answer-button.correct {
+  background: rgba(76, 175, 80, 0.8) !important;
+  border-color: #4caf50 !important;
+  color: white !important;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+}
+
+.answer-button.incorrect {
+  background: rgba(244, 67, 54, 0.8) !important;
+  border-color: #f44336 !important;
+  color: white !important;
+  box-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
+}
+
+.answer-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.no-answers {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #ff6b6b;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  padding: var(--padding-md);
+}
+
+/* Responsive layouts for different screen sizes */
+@media (max-width: 600px) {
+  .answer-buttons-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+  
+  .answer-button {
+    min-height: var(--button-height);
+    font-size: var(--font-size-small);
+    padding: var(--padding-sm);
+  }
+}
+
+@media (max-height: 600px) {
+  .answer-button {
+    min-height: var(--button-height-sm);
+    padding: var(--padding-sm);
+    font-size: var(--font-size-small);
+  }
+  
+  .answer-buttons-container {
+    gap: var(--space-sm);
+  }
+}
+
+@media (min-width: 1200px) {
+  .answer-buttons-container {
+    max-width: 800px;
+    gap: var(--space-lg);
+  }
+  
+  .answer-button {
+    font-size: var(--font-size-large);
+    padding: var(--padding-lg);
+  }
+}
+
+/* No additional media queries needed - primary sizing handled by dynamic CSS variables */

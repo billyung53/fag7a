@@ -1,0 +1,19 @@
+/* GameGrid.css - Dynamic Game Content Container */
+.game-grid {
+  order: 2;
+  flex: 1;
+  width: var(--content-width);
+  max-width: calc(var(--safe-area-width) * 0.8);
+  min-width: calc(var(--grid-item-min-width) * 3); /* Minimum for 3 columns */
+  height: calc(var(--safe-area-height) * 0.85);
+  max-height: calc(var(--safe-area-height) * 0.9);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* No media queries needed - all sizing handled by dynamic CSS variables */

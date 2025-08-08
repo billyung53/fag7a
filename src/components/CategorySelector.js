@@ -3,12 +3,18 @@ import Lottie from 'lottie-react';
 import './CategorySelector.css';
 import fireAnimation from '../assets/fire.json';
 import jumpingAnimation from '../assets/jumpingNigga.json';
+import useDeviceInfo from '../hooks/useDeviceInfo';
+import useDynamicCSS from '../hooks/useDynamicCSS';
 
 function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesChange, teamNames }) {
+  const deviceInfo = useDeviceInfo();
+  useDynamicCSS(); // Initialize dynamic CSS system
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [step, setStep] = useState('categories'); // 'categories', 'teams', 'summary'
   const [localTeamNames, setLocalTeamNames] = useState({ team1: '', team2: '' });
   const [categories, setCategories] = useState([]);
+  console.log(categories);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -299,7 +305,7 @@ function CategorySelector({ selectedCategories, onCategoryChange, onTeamNamesCha
           </div>
           <div className="summary-section">
             <div className="summary-teams">
-              <span className="team-name">{teamNames?.team1 || localTeamNames.team1}</span>
+              <span className="team-name-selector">{teamNames?.team1 || localTeamNames.team1}</span>
               <div className="vs-container">
                 <Lottie 
                   animationData={fireAnimation} 

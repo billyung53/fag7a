@@ -1,5 +1,6 @@
 // components/HelloPage/QuestionTimer.js
 import React from 'react';
+import './QuestionTimer.css';
 
 function QuestionTimer({ timeLeft }) {
   return (
@@ -11,4 +12,4 @@ function QuestionTimer({ timeLeft }) {
   );
 }
 
-export default QuestionTimer;
+export default React.memo(QuestionTimer);

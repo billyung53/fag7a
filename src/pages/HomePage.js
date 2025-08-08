@@ -4,8 +4,13 @@ import Lottie from 'lottie-react';
 import logo from '../assets/logo.png';
 import jumpingAnimation from '../assets/jumpingNigga.json';
 import CategorySelector from '../components/CategorySelector';
+import useDeviceInfo from '../hooks/useDeviceInfo';
+import useDynamicCSS from '../hooks/useDynamicCSS';
 
 function HomePage() {
+  const deviceInfo = useDeviceInfo();
+  useDynamicCSS(); // Initialize dynamic CSS system
+  
   const [topButtonHovered, setTopButtonHovered] = useState(false);
   const [bottomButtonHovered, setBottomButtonHovered] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -119,9 +124,9 @@ function HomePage() {
           .password-input::-moz-placeholder { color: #f04f30 !important; opacity: 0.7 !important; }
           .password-input:-ms-input-placeholder { color: #f04f30 !important; opacity: 0.7 !important; }
           .loading-animation {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px auto;
+            width: min(80px, 12vw);
+            height: min(80px, 12vw);
+            margin: 0 auto var(--space-md) auto;
           }
           .pulse {
             animation: pulse 1.5s ease-in-out infinite;
@@ -133,18 +138,18 @@ function HomePage() {
         `}</style>
         
         <div style={{
-          padding: '40px',
-          borderRadius: '20px',
+          padding: 'var(--padding-lg)',
+          borderRadius: 'var(--border-radius-lg)',
           boxShadow: '0 15px 35px rgba(0, 0, 0, 0.1)',
           backdropFilter: 'blur(10px)',
           textAlign: 'center',
-          maxWidth: '400px',
+          maxWidth: 'min(400px, 90vw)',
           width: '90%'
         }}>
           <img src={logo} alt="Game Logo" style={{
-            height: '120px',
+            height: 'min(120px, 15vh)',
             width: 'auto',
-            marginBottom: '10px',
+            marginBottom: 'var(--space-sm)',
           }} />
           
           {serverWaking ? (
@@ -156,34 +161,34 @@ function HomePage() {
                 autoplay={true}
               />
               <h2 style={{
-                margin: '0 0 20px 0',
+                margin: '0 0 var(--space-md) 0',
                 color: '#f04f30',
-                fontSize: '24px',
+                fontSize: 'var(--font-size-large)',
                 fontWeight: '600'
               }}>
                 Waking Up Server...
               </h2>
-              <p className="pulse" style={{ color: '#666', fontSize: '16px' }}>
+              <p className="pulse" style={{ color: '#666', fontSize: 'var(--font-size-base)' }}>
                 Please wait while we prepare everything for you
               </p>
             </>
           ) : wakeUpError ? (
             <>
               <h2 style={{
-                margin: '0 0 20px 0',
+                margin: '0 0 var(--space-md) 0',
                 color: '#e74c3c',
-                fontSize: '24px',
+                fontSize: 'var(--font-size-large)',
                 fontWeight: '600'
               }}>
                 Connection Error
               </h2>
               <div style={{
                 color: '#e74c3c',
-                fontSize: '14px',
-                marginBottom: '20px',
-                padding: '15px',
+                fontSize: 'var(--font-size-small)',
+                marginBottom: 'var(--space-md)',
+                padding: 'var(--padding-md)',
                 background: 'rgba(231, 76, 60, 0.1)',
-                borderRadius: '10px'
+                borderRadius: 'var(--border-radius)'
               }}>
                 {wakeUpError}
               </div>
@@ -191,13 +196,13 @@ function HomePage() {
                 onClick={() => window.location.reload()}
                 style={{
                   width: '100%',
-                  padding: '15px',
-                  fontSize: '16px',
+                  padding: 'var(--padding-md)',
+                  fontSize: 'var(--font-size-base)',
                   fontWeight: '600',
                   color: 'white',
                   background: '#f04f30',
                   border: 'none',
-                  borderRadius: '10px',
+                  borderRadius: 'var(--border-radius)',
                   cursor: 'pointer',
                   transition: 'transform 0.2s ease'
                 }}
@@ -211,9 +216,9 @@ function HomePage() {
           ) : (
             <>
               <h2 style={{
-                margin: '0 0 20px 0',
+                margin: '0 0 var(--space-md) 0',
                 color: '#f04f30',
-                fontSize: '24px',
+                fontSize: 'var(--font-size-large)',
                 fontWeight: '600'
               }}>
                 We're Not Open Yet 👀
@@ -230,12 +235,12 @@ function HomePage() {
                   style={{
                     width: '100%',
                     background: 'rgba(255, 109, 77, 0.2)',
-                    padding: '15px',
-                    fontSize: '16px',
+                    padding: 'var(--padding-md)',
+                    fontSize: 'var(--font-size-base)',
                     textAlign: 'center',
                     border: '2px solid #fff',
-                    borderRadius: '10px',
-                    marginBottom: '15px',
+                    borderRadius: 'var(--border-radius)',
+                    marginBottom: 'var(--space-md)',
                     outline: 'none',
                     transition: 'border-color 0.3s ease',
                     boxSizing: 'border-box',
@@ -248,11 +253,11 @@ function HomePage() {
                 {error && (
                   <div style={{
                     color: '#e74c3c',
-                    fontSize: '14px',
-                    marginBottom: '15px',
-                    padding: '10px',
+                    fontSize: 'var(--font-size-small)',
+                    marginBottom: 'var(--space-md)',
+                    padding: 'var(--padding-sm)',
                     background: 'rgba(231, 76, 60, 0.1)',
-                    borderRadius: '5px'
+                    borderRadius: 'var(--border-radius)'
                   }}>
                     {error}
                   </div>
@@ -263,13 +268,13 @@ function HomePage() {
                   disabled={loading}
                   style={{
                     width: '100%',
-                    padding: '15px',
-                    fontSize: '16px',
+                    padding: 'var(--padding-md)',
+                    fontSize: 'var(--font-size-base)',
                     fontWeight: '600',
                     color: 'white',
                     background: loading ? '#999' : '#f04f30',
                     border: 'none',
-                    borderRadius: '10px',
+                    borderRadius: 'var(--border-radius)',
                     cursor: loading ? 'not-allowed' : 'pointer',
                     transition: 'transform 0.2s ease',
                     opacity: loading ? 0.7 : 1
@@ -291,9 +296,9 @@ function HomePage() {
   return (
     <div className="container">
       <img src={logo} alt="Game Logo" style={{
-        height: '200px',
+        height: 'min(200px, 25vh)',
         width: 'auto',
-        marginBottom: '20px',
+        marginBottom: 'var(--space-md)',
       }} />
 
       {/* Category Selection Section */}
@@ -304,20 +309,20 @@ function HomePage() {
         teamNames={teamNames}
       />
 
-      <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+      <div style={{ marginTop: 'var(--space-xl)', display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
         
         <Link 
           to={canStartGame ? "/hello" : "#"}
           style={{ 
             background: canStartGame ? '#f04f30' : '#ccc',
             color: 'white', 
-            padding: '20px 40px', 
-            borderRadius: '15px', 
+            padding: 'var(--padding-lg)', 
+            borderRadius: 'var(--border-radius-lg)', 
             textDecoration: 'none',
             fontWeight: '600',
             transition: 'all 0.3s ease',
-            fontSize: '28px',
-            width: '280px',
+            fontSize: 'var(--font-size-xlarge)',
+            width: 'min(280px, 80vw)',
             textAlign: 'center',
             transform: topButtonHovered && canStartGame ? 'scale(1.05)' : 'scale(1)',
             cursor: canStartGame ? 'pointer' : 'not-allowed',

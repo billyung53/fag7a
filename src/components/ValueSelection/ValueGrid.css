@@ -1,0 +1,17 @@
+/* ValueGrid.css - Using Dynamic Design System */
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--space-lg);
+  width: 100%;
+  height: calc(60% - var(--button-height) - var(--space-xl));
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--padding-md) 0;
+  justify-items: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* No media queries needed - all sizing handled by dynamic CSS variables */

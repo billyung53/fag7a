@@ -1,22 +1,23 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import './styles/deviceOptimized.css';
 import HomePage from './pages/HomePage';
 import HelloPage from './pages/HelloPage';
-import MultiplayerGame from './pages/MultiplayerGame';
-import TeamPage from './pages/TeamPage';
 import LoadingScreenTest from './pages/LoadingScreenTest';
 import DeviceInfoWrapper from './components/DeviceInfoPanel/DeviceInfoWrapper';
+import useDynamicCSS from './hooks/useDynamicCSS';
 
 function App() {
+  // Apply dynamic CSS based on device info globally
+  const deviceInfo = useDynamicCSS();
+
   return (
     <Router>
-      <div className="App" style={{ backgroundColor: '#ffd3ac' }}>
+      <div className="App device-constrained" style={{ backgroundColor: '#ffd3ac' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/hello" element={<HelloPage />} />
-          <Route path="/multiplayer" element={<MultiplayerGame />} />
-          <Route path="/join" element={<TeamPage />} />
           <Route path="/loading-test" element={<LoadingScreenTest />} />
         </Routes>
         

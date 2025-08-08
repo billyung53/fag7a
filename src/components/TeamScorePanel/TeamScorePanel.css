@@ -1,0 +1,61 @@
+/* TeamScorePanel.css - Using Dynamic Design System */
+.team-score-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  width: var(--sidebar-width);
+  height: 100%;
+  color: white;
+  text-align: center;
+  padding: var(--padding-md);
+  box-sizing: border-box;
+}
+
+.team-score-panel.left {
+  order: 1;
+}
+
+.team-score-panel.right {
+  order: 3;
+}
+
+.score-circle {
+  width: calc(var(--sidebar-width) * 0.6);
+  height: calc(var(--sidebar-width) * 0.6);
+  min-width: 70px;
+  min-height: 70px;
+  max-width: 70px;
+  max-height: 70px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: var(--font-size-base);
+  font-weight: 900;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.team-name {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  word-wrap: break-word;
+  color: #1e1e1e;
+  max-width: 100%;
+}
+
+.team-score-panel.active .score-circle {
+  background: rgba(240, 79, 48, 0.8);
+  border-color: #fff;
+  box-shadow: 0 0 20px rgba(240, 79, 48, 0.8);
+  transform: scale(1.05);
+}
+
+/* No media queries needed - all sizing handled by dynamic CSS variables */

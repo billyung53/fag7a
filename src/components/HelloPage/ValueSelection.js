@@ -1,5 +1,9 @@
 // components/HelloPage/ValueSelection.js
 import React from 'react';
+import { CategoryItem } from '../CategorySelection';
+import { ValueGrid } from '../ValueSelection';
+import BackButton from '../BackButton';
+import './ValueSelection.css';
 
 function ValueSelection({ 
   selectedCategoryIndex, 
@@ -8,43 +12,34 @@ function ValueSelection({
   isButtonUsed, 
   questionsData, 
   onValueSelect, 
-  onBackStep,
-  JeopardyButton 
+  onBackStep
 }) {
   return (
-    <>
-      <div className="back-button-container">
-        <button className="back-button" onClick={onBackStep}>
+    <div className="value-selection-container">
+      <div className="category-and-back-row">
+        <BackButton onClick={onBackStep}>
           Back
-        </button>
-      </div>
-      
-      <div className="selected-category-display">
-        <div className="category-header selected">
-          <div className="category-title">{categoryTitle}</div>
-          <div className="category-dots">
-            {values.map((_, valueIndex) => (
-              <div 
-                key={valueIndex}
-                className={`category-dot ${isButtonUsed(selectedCategoryIndex, valueIndex) ? 'used' : ''}`}
-              ></div>
-            ))}
-          </div>
+        </BackButton>
+        
+        <div className="selected-category-display">
+          <CategoryItem
+            category={categoryTitle}
+            values={values}
+            isButtonUsed={isButtonUsed}
+            onCategorySelect={() => {}} // No-op since it's just for display
+            categoryIndex={selectedCategoryIndex}
+          />
         </div>
       </div>
       
-      <div className="value-row">
-        {values.map((value, valueIndex) => (
-          <JeopardyButton
-            key={`${selectedCategoryIndex}-${valueIndex}`}
-            value={value}
-            onClick={() => onValueSelect(value, valueIndex)}
-            isUsed={isButtonUsed(selectedCategoryIndex, valueIndex)}
-            hasQuestion={!!questionsData[selectedCategoryIndex]?.[valueIndex]}
-          />
-        ))}
-      </div>
-    </>
+      <ValueGrid
+        values={values}
+        selectedCategoryIndex={selectedCategoryIndex}
+        isButtonUsed={isButtonUsed}
+        questionsData={questionsData}
+        onValueSelect={onValueSelect}
+      />
+    </div>
   );
 }
 

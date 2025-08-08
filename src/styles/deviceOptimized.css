@@ -1,0 +1,257 @@
+/* styles/deviceOptimized.css */
+/* Base styles that work with dynamic CSS variables */
+
+/* Prevent any unexpected overflow */
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+html {
+  overflow: hidden !important;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Device-constrained container utility */
+.device-constrained {
+  width: 100vw;
+  height: 100vh;
+  max-width: var(--safe-area-width, 100vw);
+  max-height: var(--safe-area-height, 100vh);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Responsive flex utilities */
+.device-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.device-flex-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.device-flex-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+/* Grid utilities that respect device boundaries */
+.device-grid-fit {
+  display: grid;
+  height: 100%;
+  max-height: var(--safe-area-height, 100vh);
+  overflow: hidden;
+}
+
+.device-grid-center {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+
+/* Typography that scales with device */
+.device-text-scale {
+  font-size: clamp(0.7rem, var(--optimal-font-size, 2vw), 1.5rem);
+  line-height: 1.4;
+}
+
+.device-text-small {
+  font-size: clamp(0.6rem, calc(var(--optimal-font-size, 16px) * 0.8), 1rem);
+}
+
+.device-text-large {
+  font-size: clamp(1rem, calc(var(--optimal-font-size, 16px) * 1.2), 2rem);
+}
+
+/* Button utilities optimized for touch */
+.device-btn {
+  min-height: var(--optimal-button-height, 44px);
+  padding: var(--optimal-padding, 10px);
+  font-size: var(--optimal-font-size, 1rem);
+  touch-action: manipulation;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-wrap: break-word;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.device-btn:active {
+  transform: scale(0.98);
+}
+
+/* Input elements optimized for device */
+.device-input {
+  min-height: var(--optimal-button-height, 44px);
+  padding: var(--optimal-padding, 10px);
+  font-size: var(--optimal-font-size, 1rem);
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Safe area utilities for devices with notches/rounded corners */
+.safe-area-padding {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-margin {
+  margin-top: env(safe-area-inset-top);
+  margin-bottom: env(safe-area-inset-bottom);
+  margin-left: env(safe-area-inset-left);
+  margin-right: env(safe-area-inset-right);
+}
+
+/* Layout utilities */
+.device-container {
+  width: 100%;
+  height: 100%;
+  max-width: var(--safe-area-width, 100vw);
+  max-height: var(--safe-area-height, 100vh);
+  overflow: hidden;
+  position: relative;
+}
+
+.device-content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Spacing utilities based on device */
+.device-gap {
+  gap: var(--optimal-gap, 10px);
+}
+
+.device-padding {
+  padding: var(--optimal-padding, 10px);
+}
+
+.device-margin {
+  margin: var(--optimal-gap, 10px);
+}
+
+/* Scrollable areas (when needed) */
+.device-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: var(--safe-area-height, 100vh);
+  scrollbar-width: thin;
+  scrollbar-color: #ff6d4d transparent;
+}
+
+.device-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.device-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.device-scroll::-webkit-scrollbar-thumb {
+  background: #ff6d4d;
+  border-radius: 3px;
+}
+
+/* Animation utilities optimized for performance */
+.device-animation {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Hide elements on very small screens */
+.hide-on-small {
+  display: block;
+}
+
+@media screen and (max-width: 480px) {
+  .hide-on-small {
+    display: none !important;
+  }
+}
+
+/* Show only on mobile */
+.mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+/* Accessibility improvements for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .device-btn:hover {
+    /* Disable hover effects on touch devices */
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .device-btn:focus {
+    outline: 2px solid #ff6d4d;
+    outline-offset: 2px;
+  }
+}
+
+/* High DPI screen optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .device-btn {
+    border-width: 0.5px;
+  }
+}
+
+/* Landscape orientation specific */
+@media screen and (orientation: landscape) {
+  .landscape-row {
+    flex-direction: row;
+  }
+  
+  .landscape-compact {
+    gap: calc(var(--optimal-gap, 10px) * 0.5);
+    padding: calc(var(--optimal-padding, 10px) * 0.5);
+  }
+}
+
+/* Portrait orientation specific */
+@media screen and (orientation: portrait) {
+  .portrait-column {
+    flex-direction: column;
+  }
+  
+  .portrait-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--optimal-gap, 10px);
+  }
+}

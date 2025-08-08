@@ -1,23 +1,41 @@
 .App {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  max-width: var(--safe-area-width, 100vw);
+  max-height: var(--safe-area-height, 100vh);
   background-color: #ffd3ac;
   background-size: 400% 400%;
-  padding: 20px 10px 40px 10px;
+  padding: 0;
   margin: 0;
   box-sizing: border-box;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 body {
   background-color: #ffd3ac;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
 }
 
 .container {
-  max-width: 800px;
   width: 100%;
-  margin: 0 auto;
-  border-radius: 10px;
+  height: 100%;
+  max-width: var(--safe-area-width, 100vw);
+  max-height: var(--safe-area-height, 100vh);
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
   padding: 20px 15px 30px 15px;
   box-sizing: border-box;
 }

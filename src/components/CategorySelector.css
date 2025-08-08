@@ -1,10 +1,10 @@
 .category-selector {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto 30px auto;
-  padding: 25px;
+  max-width: min(800px, 90vw);
+  margin: 0 auto var(--space-xl) auto;
+  padding: var(--padding-lg);
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
+  border-radius: var(--border-radius-lg);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
 }
@@ -13,7 +13,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
   
 }
 
@@ -22,7 +22,7 @@
   color: #f04f30;
     text-align: center;
     align-items: center;
-  font-size: 1.5rem;
+  font-size: var(--font-size-large);
   font-weight: 600;
 }
 
@@ -31,13 +31,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .category-header h3 {
   margin: 0;
   color: #333;
-  font-size: 1.5rem;
+  font-size: var(--font-size-large);
   font-weight: 600;
 }
 
@@ -46,9 +46,9 @@
   background: #fa8770;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-small);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -67,38 +67,38 @@
 
 .next-btn.full-width {
   width: 100%;
-  padding: 12px 20px;
-  font-size: 16px;
-  margin-top: 20px;
+  padding: var(--padding-md) var(--padding-lg);
+  font-size: var(--font-size-base);
+  margin-top: var(--space-md);
 }
 
 /* Team Names Section */
 .team-names-container {
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: var(--space-md);
+  padding: var(--padding-md);
   background: rgba(240, 79, 48, 0.05);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   border: 1px solid rgba(240, 79, 48, 0.1);
 }
 
 .team-input-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .team-input-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
   color: #333;
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--font-size-small);
 }
 
 .team-input {
   width: 100%;
-  padding: 12px 15px;
+  padding: var(--padding-md) var(--padding-md);
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-base);
   outline: none;
   transition: all 0.3s ease;
   background: white;
@@ -114,9 +114,9 @@
 /* Game Summary Section */
 .game-summary {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto 30px auto;
-  padding: 20px;
+  max-width: min(800px, 90vw);
+  margin: 0 auto var(--space-xl) auto;
+  padding: var(--padding-md);
   text-align: center;
 }
 
@@ -124,19 +124,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .summary-header h3 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: var(--font-size-large);
   font-weight: 600;
 }
 
 .summary-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-md);
   align-items: center;
 }
 
@@ -145,9 +145,9 @@
 }
 
 .summary-section h4 {
-  margin: 0 0 10px 0;
+  margin: 0 0 var(--space-sm) 0;
   color: #333;
-  font-size: 1.1rem;
+  font-size: var(--font-size-base);
   font-weight: 600;
   text-align: center;
 }
@@ -155,16 +155,16 @@
 .summary-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-sm);
   justify-content: center;
 }
 
 .summary-tag {
   background: #fff;
   color: #f04f30;
-  padding: 8px 13px;
-  border-radius: 15px;
-  font-size: 18px;
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
   font-weight: 500;
   animation: gentleBounce 2s ease-in-out infinite;
   animation-delay: calc(var(--animation-order) * 0.1s);
@@ -182,19 +182,18 @@
 .summary-teams {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: var(--space-md);
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.team-name {
-  background: #1f4e96;
+.team-name-selector {
   color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: var(--border-radius);
   font-weight: 600;
-  font-size: 16px;
-  margin: 10px;
+  font-size: var(--font-size-base);
+  margin: var(--space-sm);
 }
 
 
@@ -208,8 +207,8 @@
 
 .fire-animation {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: min(60px, 8vw);
+  height: min(60px, 8vw);
   z-index: 1;
   opacity: 0.8;
 }
@@ -225,15 +224,15 @@
 /* Search Bar */
 .search-container {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .search-input {
   width: 100%;
-  padding: 15px 45px 15px 20px;
+  padding: var(--padding-md) calc(var(--padding-lg) * 2) var(--padding-md) var(--padding-md);
   border: 2px solid #e0e0e0;
-  border-radius: 15px;
-  font-size: 16px;
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
   outline: none;
   transition: all 0.3s ease;
   background: white;
@@ -248,7 +247,7 @@
 
 .search-icon {
   position: absolute;
-  right: 15px;
+  right: var(--padding-md);
   top: 50%;
   transform: translateY(-50%);
   color: #999;

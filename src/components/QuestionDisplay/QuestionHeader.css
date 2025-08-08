@@ -1,0 +1,47 @@
+/* QuestionHeader.css - Dynamic Question Header */
+.question-header {
+  text-align: center;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+  padding: var(--padding-sm);
+}
+
+.question-title {
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  color: #FFD700;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
+}
+
+/* Responsive font scaling */
+@media (max-width: 600px) {
+  .question-title {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-height: 600px) {
+  .question-title {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-xs);
+  }
+  
+  .question-header {
+    margin-bottom: var(--space-xs);
+    padding: var(--padding-sm);
+  }
+}
+
+@media (min-width: 1200px) {
+  .question-title {
+    font-size: var(--font-size-xlarge);
+  }
+}
+
+/* No additional media queries needed - primary sizing handled by dynamic CSS variables */

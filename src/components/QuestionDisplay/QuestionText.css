@@ -1,0 +1,40 @@
+/* QuestionText.css - Dynamic Question Text */
+.question-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  padding: var(--padding-md);
+  max-height: 40vh; /* Prevent very long questions from taking too much space */
+}
+
+.question-content {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.6;
+  font-family: 'Montserrat', sans-serif;
+  max-width: 100%;
+  word-wrap: break-word;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+/* Responsive font scaling for different screen sizes */
+@media (max-height: 600px) {
+  .question-content {
+    font-size: var(--font-size-small);
+    line-height: 1.4;
+  }
+}
+
+@media (min-height: 900px) {
+  .question-content {
+    font-size: var(--font-size-large);
+  }
+}
+
+/* No additional media queries needed - primary sizing handled by dynamic CSS variables */

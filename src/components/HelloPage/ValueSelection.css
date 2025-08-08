@@ -1,0 +1,28 @@
+/* ValueSelection.css - Using Dynamic Design System */
+.value-selection-container {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  height: 95%;
+  box-sizing: border-box;
+}
+
+.category-and-back-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+  width: 65%;
+  position: relative;
+}
+
+.category-and-back-row .back-button-container {
+  margin-right: var(--space-lg);
+}
+
+.selected-category-display {
+  display: flex;
+  justify-content: center;
+}
+
+/* No media queries needed - all sizing handled by dynamic CSS variables */

@@ -1,15 +1,19 @@
 // components/HelloPage/HelloPage.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import JeopardyButton from '../components/JeopardyButton';
 import RotationPrompt from '../components/RotationPrompt';
-import FloatingPeaches from '../components/FloatingPeaches';
+import FloatingPeaches from '../components/FloatingPeaches/FloatingPeaches';
 import LoadingScreen from '../components/LoadingScreen';
 import useOrientation from '../hooks/useOrientation';
-import TeamScorePanel from '../components/HelloPage/TeamScorePanel';
-import CategorySelection from '../components/HelloPage/CategorySelection';
+import useDeviceInfo from '../hooks/useDeviceInfo';
+import useDynamicCSS from '../hooks/useDynamicCSS';
+import TeamScorePanel from '../components/TeamScorePanel';
+import GameLayout from '../components/GameLayout';
+import GameGrid from '../components/GameGrid';
+import CategorySelection from '../components/CategorySelection';
 import ValueSelection from '../components/HelloPage/ValueSelection';
-import QuestionDisplay from '../components/HelloPage/QuestionDisplay';
+import QuestionDisplay from '../components/QuestionDisplay/QuestionDisplay';
 import './HelloPage.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://fiveo5a.onrender.com';
@@ -18,6 +22,8 @@ function HelloPage() {
   const location = useLocation();
   const { selectedCategories, teamNames } = location.state || {};
   const { isPortrait, isMobile } = useOrientation();
+  const deviceInfo = useDeviceInfo();
+  useDynamicCSS(); // Initialize dynamic CSS system
   
   const [usedButtons, setUsedButtons] = useState(new Set());
   const [team1Score, setTeam1Score] = useState(0);
@@ -36,7 +42,7 @@ function HelloPage() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
 
-  const [apiResults, setApiResults] = useState([]);
+  const [apiResults, setApiResults] = useState({});
   const hasFetchedRef = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -78,7 +84,7 @@ function HelloPage() {
           setLoadingProgress(100);
           
           setTimeout(() => {
-            setApiResults(result || []);
+            setApiResults(result || {});
             setIsLoading(false);
             clearInterval(progressInterval);
           }, 500);
@@ -124,17 +130,19 @@ function HelloPage() {
       return;
     }
     
-    setCurrentQuestion({
+    // Create shuffled answers once and store them
+    const shuffledAnswers = [questionData.correct_answer, ...questionData.incorrect_answers]
+      .sort(() => Math.random() - 0.5);
+    
+    const questionWithAnswers = {
       ...questionData,
       categoryIndex: selectedCategoryIndex,
       valueIndex: valueIndex,
-      allAnswers: [questionData.correct_answer, ...questionData.incorrect_answers].sort(() => Math.random() - 0.5)
-    });
+      allAnswers: shuffledAnswers
+    };
     
-    console.log('Question Data:', questionData);
-    console.log('All Answers:', [questionData.correct_answer, ...questionData.incorrect_answers]);
-    
-    setTimeLeft(30);
+    setCurrentQuestion(questionWithAnswers);
+    setTimeLeft(180);
     setSelectedAnswer(null);
     setShowResult(false);
     setGameStep(3);
@@ -234,11 +242,13 @@ function HelloPage() {
     return usedButtons.has(buttonId);
   };
 
-  const categoryTitles = apiResults.categories?.map(cat => cat.title) || [];
+  const categoryTitles = apiResults?.categories?.map(cat => cat.title) || [];
 
-  // Organize questions by category and value
-  const organizeQuestions = () => {
-    if (!apiResults.categories) return {};
+  // Organize questions by category and value - memoize to prevent excessive re-calculations
+  const questionsData = useMemo(() => {
+    if (!apiResults?.categories) {
+      return {};
+    }
     
     const organizedQuestions = {};
     
@@ -259,9 +269,7 @@ function HelloPage() {
     });
     
     return organizedQuestions;
-  };
-
-  const questionsData = organizeQuestions();
+  }, [apiResults?.categories]);
 
   return (
     <div className="container">
@@ -272,8 +280,11 @@ function HelloPage() {
           <FloatingPeaches />
           
           {showRotationPrompt && <RotationPrompt />}
+
+
+          <div className="viewport">
           
-          <div className="game-layout">
+          <GameLayout>
             <TeamScorePanel 
               team="left"
               teamName={teamNames?.team1}
@@ -281,7 +292,7 @@ function HelloPage() {
               isActive={currentTeam === 1}
             />
             
-            <div className="jeopardy-grid">
+            <GameGrid>
               {gameStep === 1 && (
                 <CategorySelection 
                   categoryTitles={categoryTitles}
@@ -313,7 +324,13 @@ function HelloPage() {
                   onAnswerClick={handleAnswerClick}
                 />
               )}
-            </div>
+              
+              {gameStep === 3 && !currentQuestion && (
+                <div style={{color: 'white', fontSize: '24px'}}>
+                  No question data available. GameStep: {gameStep}, CurrentQuestion: {currentQuestion ? 'exists' : 'null'}
+                </div>
+              )}
+            </GameGrid>
             
             <TeamScorePanel 
               team="right"
@@ -321,6 +338,7 @@ function HelloPage() {
               score={team2Score}
               isActive={currentTeam === 2}
             />
+          </GameLayout>
           </div>
         </>
       )}

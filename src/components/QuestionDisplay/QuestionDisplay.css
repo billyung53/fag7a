@@ -1,0 +1,74 @@
+/* QuestionDisplay.css - Dynamic Question Display Container */
+.question-display-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: var(--padding-sm);
+  gap: var(--space-sm);
+  box-sizing: border-box;
+  overflow: hidden;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Responsive adjustments for different screen sizes */
+@media (max-width: 600px) {
+  .question-display-container {
+    padding: var(--padding-sm);
+    gap: var(--space-sm);
+  }
+}
+
+@media (max-height: 600px) {
+  .question-display-container {
+    padding: var(--padding-sm);
+    gap: var(--space-xs);
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 1200px) and (min-height: 800px) {
+  .question-display-container {
+    padding: var(--padding-lg);
+    gap: var(--space-lg);
+    max-width: 1000px;
+  }
+}
+
+/* Landscape phone optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+  .question-display-container {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  
+  .question-display-container > * {
+    flex: 1;
+  }
+  
+  .timer-container {
+    order: 1;
+    flex: 0 0 auto;
+    margin-right: var(--space-md);
+    margin-bottom: 0;
+  }
+  
+  .question-header {
+    order: 2;
+    margin-bottom: 0;
+  }
+  
+  .question-text {
+    order: 3;
+  }
+  
+  .answer-buttons-container {
+    order: 4;
+  }
+}
+
+/* No additional media queries needed - primary sizing handled by dynamic CSS variables */

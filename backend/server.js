@@ -97,7 +97,7 @@ app.get('/categories', async (req, res) => {
     
     const { data, error } = await supabase
       .from('categories')
-      .select('*')
+      .select('id, title, type, api_id, is_active, created_at, lang')
       .eq('is_active', true)
       .order('id', { ascending: true }); // Optional: order by id
 
@@ -164,7 +164,7 @@ app.get('/categories/by-ids', async (req, res) => {
     
     const { data, error } = await supabase
       .from('categories')
-      .select('*')
+      .select('id, title, type, api_id, description, is_active, created_at, updated_at')
       .in('id', categoryIds)
       .eq('is_active', true)
       .order('id', { ascending: true });

@@ -1,9 +1,10 @@
-// components/HelloPage/QuestionDisplay.js
+// components/QuestionDisplay/QuestionDisplay.js
 import React from 'react';
 import QuestionTimer from '../QuestionTimer';
 import QuestionHeader from './QuestionHeader';
 import QuestionText from './QuestionText';
 import AnswerButtons from './AnswerButtons';
+import './QuestionDisplay.css';
 
 function QuestionDisplay({ 
   currentQuestion, 
@@ -12,14 +13,22 @@ function QuestionDisplay({
   showResult, 
   onAnswerClick 
 }) {
+  if (!currentQuestion) {
+    return (
+      <div className="question-display-container">
+        <p>No question data available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="question-display-container">
       <QuestionTimer timeLeft={timeLeft} />
       
-      <QuestionHeader 
+      {/* <QuestionHeader 
         categoryTitle={currentQuestion.categoryTitle}
         value={currentQuestion.value}
-      />
+      /> */}
 
       <QuestionText question={currentQuestion.question} />
       
@@ -34,4 +43,4 @@ function QuestionDisplay({
   );
 }
 
-export default QuestionDisplay;
+export default React.memo(QuestionDisplay);

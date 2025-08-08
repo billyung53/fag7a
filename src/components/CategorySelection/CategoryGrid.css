@@ -1,0 +1,17 @@
+/* CategoryGrid.css - Using Dynamic CSS Design System */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--space-lg);
+  width: 80%;
+  height: 75%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--padding-md) 0;
+  justify-items: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* No media queries needed - all sizing handled by dynamic CSS variables */

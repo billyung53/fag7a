@@ -4,10 +4,10 @@
 
 export const DEV_CONFIG = {
   // Toggle DeviceInfoPanel visibility
-  SHOW_DEVICE_INFO: true, // Set to false for production
+  SHOW_DEVICE_INFO: false, // Set to false for production
   
   // Other dev features can be added here
-  SHOW_DEBUG_LOGS: true,
+  SHOW_DEBUG_LOGS: false,
   ENABLE_PERFORMANCE_MONITORING: true,
   
   // Environment detection
