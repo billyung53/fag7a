@@ -142,7 +142,7 @@ function HelloPage() {
     };
     
     setCurrentQuestion(questionWithAnswers);
-    setTimeLeft(180);
+    setTimeLeft(30);
     setSelectedAnswer(null);
     setShowResult(false);
     setGameStep(3);
