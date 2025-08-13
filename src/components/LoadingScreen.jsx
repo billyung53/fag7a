@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import peach from "../assets/peach.png";
+
 
 const LoadingScreen = ({
   messages = ["Loading...", "Please wait...", "Almost there..."],
@@ -43,7 +45,7 @@ const LoadingScreen = ({
     <div className="loading-container">
       <div className="loading-content">
         <img
-          src="src/assets/peach.png"
+          src={peach}
           alt="Peach logo"
           className="loading-logo"
           width="80"

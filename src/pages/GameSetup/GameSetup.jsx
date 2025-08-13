@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./GameSetup.css";
 import fireAnimation from "../../assets/fire.json";
 import Lottie from "lottie-react";
+import peach from "../../assets/peach.png";
 
 const GameSetup = ({ onGameStart }) => {
   const navigate = useNavigate();
@@ -334,15 +335,6 @@ const GameSetup = ({ onGameStart }) => {
           </span>
           <span className="team-name">{teamNames.team2}</span>
         </div>
-
-        {/* <div className="how-to-play">
-          <h3>How To Play</h3>
-          <div className="rules">
-            <div>Choose a Category</div>
-            <div>Choose a Difficulty</div>
-            <div>Answer Correctly</div>
-          </div>
-        </div> */}
       </div>
     );
   };
@@ -352,7 +344,7 @@ const GameSetup = ({ onGameStart }) => {
       <header className="setup-header">
         <div className="peach-icon">
           <img
-            src="src/assets/peach.png"
+            src={peach}
             alt="Peach logo - referral access"
             className="logo"
             width="36"

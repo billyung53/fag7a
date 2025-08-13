@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./Game.css";
 import Rotation from "../../components/ui/Rotation/Rotation";
 import GameBuilder from "../../components/ui/GameBuilder/GameBuilder";
+import peach from "../../assets/peach.png";
+
 
 // Add this helper ABOVE export default function Game()
 function decodeEntities(str = "") {
@@ -328,7 +330,7 @@ export default function Game() {
       <div className="game-ended">
         <div className="game-ended-content">
           <img
-            src="/src/assets/peach.png"
+            src={peach}
             alt="Peach Logo"
             className="peach-logo"
           />
@@ -348,14 +350,6 @@ export default function Game() {
 
   return (
     <div className="game-container">
-      {/* Header with Peach Logo */}
-      {/* <header className="game-header">
-        <img
-          src="/src/assets/peach.png"
-          alt="Peach Logo"
-          className="peach-logo"
-        />
-      </header> */}
 
       <div className="game-layout">
         {/* Game Content */}

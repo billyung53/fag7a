@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./auth.css";
 import LoadingScreen from "../../components/LoadingScreen";
 import { WAKE_UP } from "../../data/lists";
+import peach from "../../assets/peach.png";
+
 
 
 export default function Auth() {
@@ -130,7 +132,7 @@ export default function Auth() {
   };
 
   useEffect(() => {
-    document.title = "5o5a Game Setup";
+    document.title = "5o5a";
     const metaDesc =
       document.querySelector('meta[name="description"]') ||
       Object.assign(document.createElement("meta"), { name: "description" });
@@ -168,7 +170,7 @@ export default function Auth() {
               </button>
 
               <img
-                src="src/assets/peach.png"
+                src={peach}
                 alt="Peach logo - referral access"
                 className="logo"
                 width="36"

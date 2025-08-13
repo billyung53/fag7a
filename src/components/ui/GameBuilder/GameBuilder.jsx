@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./GameBuilder.css";
 import { BUILDING_GAME } from "../../../data/lists";
+import peach from "../../../assets/peach.png";
+
 
 const GameBuilder = ({ onComplete }) => {
   const [displayedMessage, setDisplayedMessage] = useState("");
@@ -76,7 +78,7 @@ const GameBuilder = ({ onComplete }) => {
         {/* Peach Logo */}
         <div className="peach-logo">
           <img
-            src="/src/assets/peach.png"
+            src={peach}
             alt="Peach Logo"
             className="peach-image"
           />
