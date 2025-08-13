@@ -1,0 +1,647 @@
+/* GameSetup.css */
+.game-setup {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* padding-bottom: 10px; Space for bottom bar */
+  box-sizing: border-box;
+}
+
+/* Header */
+.setup-header {
+  display: flex;
+  justify-content: space;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 2px solid #000;
+  background-color: #ffe5bd;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+
+/* Main Content */
+.setup-main {
+  flex: 1;
+  padding: 20px;
+  padding-bottom: 120px; /* Add space for bottom bar + extra margin */
+  max-height: calc(100vh - 140px); /* Adjust for actual header height */
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.step-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.step-content {
+  width: 100%;
+}
+
+/* Step 1 Styles */
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 20px;
+  border: 2px solid #000;
+  border-radius: 12px;
+  background-color: transparent;
+  font-size: 16px;
+  color: #1e1e1e;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #1e1e1e;
+}
+
+.language-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.language-btn {
+  padding: 12px 24px;
+  border-radius: 25px;
+  border: 2px solid #000;
+  background-color: transparent;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+    outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.language-btn.active {
+  background-color: #000;
+  color: #ffe5bd;
+  border-color: #000;
+}
+
+.language-btn:hover:not(.active) {
+  background-color: rgba(139, 69, 19, 0.1);
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.category-card {
+  background-color: #F5DEB3;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 0;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.category-card.selected {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+/* Image section - like Bootstrap's card-img-top */
+.category-img-top {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7cf92;
+}
+
+.category-img-top img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.category-placeholder {
+  width: 28px;
+  height: 28px;
+  border: 2px dashed #000;
+  border-radius: 8px;
+}
+
+.category-card.selected .category-placeholder {
+  border-color: #000;
+}
+
+/* Body section - like Bootstrap's card-body */
+.category-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-top: #000 solid 2px;
+}
+
+.category-name {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #000;
+}
+
+.category-card.selected .category-name {
+  color: #ffe5bd;
+}
+
+.category-card.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.category-card.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Landscape Overlay */
+.landscape-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.landscape-overlay p {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+  padding: 2rem;
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* Show overlay only on mobile devices in landscape mode */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .landscape-overlay {
+    display: flex;
+  }
+  
+  /* Hide main content when landscape overlay is shown */
+  .setup-header,
+  .setup-main,
+  .bottom-bar {
+    display: none;
+  }
+}
+
+/* Step 2 Styles */
+.step2-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+.team-input-container {
+  margin-bottom: 32px;
+}
+
+.team-label {
+  display: block;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.team-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #000;
+  border-radius: 12px;
+  background-color: transparent;
+  font-size: 16px;
+  color: #000;
+  box-sizing: border-box;
+}
+
+.team-input::placeholder {
+  color: #666;
+}
+
+.team-input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+/* Step 3 Styles */
+.step3-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.selected-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+
+.selected-category-card {
+  background-color: #000;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  /* Add bouncing animation */
+  animation: subtleBounce 2s ease-in-out infinite;
+  animation-delay: calc(var(--animation-delay, 0) * 0.2s);
+}
+
+/* Subtle bouncing keyframe animation */
+@keyframes subtleBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Optional: Pause animation on hover for better UX */
+.selected-category-card:hover {
+  animation-play-state: paused;
+}
+
+/* Falling animation for category cards */
+.selected-category-card.fall-out {
+  animation: fallOut 1.2s ease-in forwards;
+  animation-delay: var(--fall-delay, 0s);
+}
+
+.team-name.fall-out {
+  animation: fallOut 1.2s ease-in forwards;
+  animation-delay: var(--fall-delay, 0s);
+}
+
+@keyframes fallOut {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Container animation for smooth transition */
+.animate-fall-out {
+  overflow: hidden;
+}
+
+.vs-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  flex-direction: row;
+}
+
+.team-name {
+  color: #000;
+}
+
+.vs-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+}
+
+.how-to-play {
+  text-align: center;
+}
+
+.how-to-play h3 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Bottom Bar */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #F5DEB3;
+  border-top: 2px solid #000;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 16px;
+    padding-bottom: 16px;
+  z-index: 100;
+}
+
+.bottom-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+}
+
+.bottom-text h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 0 0;
+  color: #000;
+}
+
+.bottom-text p {
+  font-size: 16px;
+  margin: 0;
+  color: #666;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.back-btn {
+  padding: 2px 24px;
+  border: 2px solid #000;
+  border-radius: 25px;
+  background-color: transparent;
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: rgba(139, 69, 19, 0.1);
+}
+
+.next-btn {
+  padding: 12px 36px;
+  border: none;
+  border-radius: 25px;
+  background-color: #000;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.next-btn:hover:not(.disabled) {
+  background-color: #333;
+  transform: translateY(-1px);
+}
+
+.next-btn.disabled {
+  background-color: #1e1e1e;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* WebKit-based browsers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px; /* for horizontal if any */
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;        /* dark thumb */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1a1a1a #fde9cc;
+}
+
+/* Optional: Only style inside a specific scrolling area */
+.categories-grid {
+  /* existing rules... */
+  scrollbar-width: thin;
+  scrollbar-color: #1a1a1a #fde9cc;
+}
+.categories-grid::-webkit-scrollbar-thumb {
+  background: #000;
+}
+
+/* Hide scrollbar but keep scroll (optional pattern) */
+/*
+.scroll-hide {
+  scrollbar-width: none;
+}
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+*/
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .setup-main {
+    padding: 20px;
+  }
+  
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .category-card {
+    min-height: 40px;
+  }
+  
+  .category-img-top {
+    height: 80px;
+  }
+  
+  .category-body {
+    padding: 8px 12px;
+  }
+  
+  .category-name {
+    font-size: 14px;
+  }
+  
+  .step-title {
+    font-size: 32px;
+  }
+  
+  .bottom-content {
+    flex-direction: row;
+    gap: 10px;
+    text-align: left;
+  }
+  
+  .action-buttons {
+    justify-content: center;
+  }
+  
+  .vs-section {
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .team-name {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}  }    font-size: 14px;  .team-name {    }    gap: 8px;    flex-direction: column;  .vs-section {    }    gap: 8px;    flex-direction: column;    width: 100%;  .action-buttons {    }    align-items: flex-start;    flex-direction: column;  .bottom-content {    }    font-size: 28px;  .step-title {    }    font-size: 12px;  .category-name {    }    padding: 6px 8px;  .category-body {    }    height: 60px;  .category-img-top {    }    min-height: 40px;  .category-card {    }  }
+  
+  .category-card {
+    min-height: 80px;
+  }
+  
+  .category-img-top {
+    height: 80px;
+  }
+  
+  .category-body {
+    padding: 6px 10px;
+  }
+  
+  .category-name {
+    font-size: 13px;
+  }
+  
+  .step-title {
+    font-size: 20px;
+  }
+  
+  .language-selector {
+    flex-direction: row;
+    gap: 8px;
+  }
+  
+  .language-btn {
+    padding: 5px 20px;
+  }
+}
