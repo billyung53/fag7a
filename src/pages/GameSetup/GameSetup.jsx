@@ -16,6 +16,8 @@ const GameSetup = ({ onGameStart }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  console.log(categories);
+
   // console.log(selectedCategories, teamNames, language);
 
   // Fetch categories from API on component mount
@@ -147,12 +149,12 @@ const GameSetup = ({ onGameStart }) => {
         };
       case 2:
         return {
-          main: "Who?",
+          main: "Teams",
           sub: "Choose your teams",
         };
       case 3:
         return {
-          main: "You're all set",
+          main: "Lets Go",
           sub: "If you lose you buy dinner",
         };
       default:

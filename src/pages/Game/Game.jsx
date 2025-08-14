@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./Game.css";
 import Rotation from "../../components/ui/Rotation/Rotation";
 import GameBuilder from "../../components/ui/GameBuilder/GameBuilder";
+import QuestionDisplay from "../../components/game/QuestionDisplay/QuestionDisplay";
 import peach from "../../assets/peach.png";
-
 
 // Add this helper ABOVE export default function Game()
 function decodeEntities(str = "") {
@@ -109,7 +109,7 @@ export default function Game() {
         }
 
         const data = await response.json();
-        console.log("Fetched questions:", data);
+        // console.log("Fetched questions:", data);
         setQuestions(data);
       } catch (err) {
         console.error("Error fetching questions:", err);
@@ -305,7 +305,7 @@ export default function Game() {
   }
 
   const { selectedCategories, teamNames } = gameData;
-  console.log(selectedCategories, teamNames);
+  // console.log(selectedCategories, teamNames);
 
   // Determine timer color phase for circular timer (only relevant in question step)
   const timerPhase = timeLeft > 20 ? "green" : timeLeft > 10 ? "yellow" : "red";
@@ -329,11 +329,7 @@ export default function Game() {
     return (
       <div className="game-ended">
         <div className="game-ended-content">
-          <img
-            src={peach}
-            alt="Peach Logo"
-            className="peach-logo"
-          />
+          <img src={peach} alt="Peach Logo" className="peach-logo" />
           <h1>Game Over</h1>
           <h2>{winner} Won 🏆</h2>
           <p>Final Score: {winnerScore} points</p>
@@ -350,7 +346,6 @@ export default function Game() {
 
   return (
     <div className="game-container">
-
       <div className="game-layout">
         {/* Game Content */}
         <div className="game-content">
@@ -401,63 +396,12 @@ export default function Game() {
           )}
 
           {gameStep === 3 && currentQuestion && (
-            <div className="question-display">
-              <div className="question-header">
-                {/* <h2>
-                  {currentQuestion.categoryTitle} - {currentQuestion.value}{" "}
-                  points
-                </h2> */}
-                {/* Timer relocated to bottom bar */}
-              </div>
-
-              <div className="question-text">
-                <h3>{currentQuestion.question}</h3>
-              </div>
-
-              <div className="answers-grid">
-                {currentQuestion.allAnswers.map((answer, index) => {
-                  let buttonClass = "answer-btn";
-
-                  if (showResult) {
-                    if (answer === currentQuestion.correct_answer) {
-                      buttonClass += " correct";
-                    } else if (
-                      answer === selectedAnswer &&
-                      answer !== currentQuestion.correct_answer
-                    ) {
-                      buttonClass += " incorrect";
-                    }
-                  }
-
-                  return (
-                    <button
-                      key={index}
-                      className={buttonClass}
-                      onClick={() => handleAnswerClick(answer)}
-                      disabled={showResult}
-                    >
-                      {answer}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {showResult && (
-                <div className="result-section">
-                  <p
-                    className={
-                      selectedAnswer === currentQuestion.correct_answer
-                        ? "correct-msg"
-                        : "incorrect-msg"
-                    }
-                  >
-                    {selectedAnswer === currentQuestion.correct_answer
-                      ? "Correct!"
-                      : "Time's up or Wrong Answer!"}
-                  </p>
-                </div>
-              )}
-            </div>
+            <QuestionDisplay
+              currentQuestion={currentQuestion}
+              selectedAnswer={selectedAnswer}
+              showResult={showResult}
+              onAnswerClick={handleAnswerClick}
+            />
           )}
         </div>
       </div>

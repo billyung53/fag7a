@@ -110,7 +110,7 @@ const LoadingScreen = ({
           width: 40px;
           height: 40px;
           border: 4px solid #1e1e1e;
-          border-top: 4px solid #e74c3c;
+          border-top: 4px solid #1e1e1e;
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin: 0 auto;

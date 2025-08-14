@@ -5,7 +5,7 @@ const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-server = http.createServer(app);
+const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: ["http://localhost:3000", "https://your-netlify-app.netlify.app"],
@@ -20,8 +20,61 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const BACKDOOR_PASSWORD = 'admin123';
 
+const adminOTP = '9929';
+
 app.use(cors());
 app.use(express.json());
+
+// Simple endpoint to retrieve current admin OTP.
+// NOTE: For production move this secret to an environment variable and secure the endpoint.
+app.get('/admin/otp', (req, res) => {
+  try {
+    return res.json({ success: true, otp: adminOTP });
+  } catch (err) {
+    console.error('Error serving /admin/otp:', err);
+    return res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// Admin full data dump (categories, questions, referal, referal_usage)
+// WARNING: This exposes potentially sensitive data. Protect or remove before production.
+app.get('/admin/full-dump', async (req, res) => {
+  try {
+    const started = Date.now();
+    const [categoriesRes, questionsRes, referralRes, referralUsageRes] = await Promise.all([
+      supabase.from('categories').select('*'),
+      supabase.from('questions').select('*'),
+      supabase.from('referal').select('*'),
+      supabase.from('referal_usage').select('*')
+    ]);
+
+    const buildSection = (label, result) => ({
+      count: Array.isArray(result.data) ? result.data.length : 0,
+      error: result.error ? result.error.message : null,
+      data: result.data || []
+    });
+
+    const payload = {
+      success: true,
+      generatedAt: new Date().toISOString(),
+      durationMs: Date.now() - started,
+      categories: buildSection('categories', categoriesRes),
+      questions: buildSection('questions', questionsRes),
+      referal: buildSection('referal', referralRes),
+      referal_usage: buildSection('referal_usage', referralUsageRes)
+    };
+
+    // If any section had an error, set top-level partial flag
+    if (payload.categories.error || payload.questions.error || payload.referal.error || payload.referal_usage.error) {
+      payload.partial = true;
+    }
+
+    return res.json(payload);
+  } catch (err) {
+    console.error('Error in /admin/full-dump:', err);
+    return res.status(500).json({ success: false, error: 'Server error', details: err.message });
+  }
+});
 
 
 
@@ -159,7 +212,6 @@ app.get('/categories/by-ids', async (req, res) => {
       });
     }
 
-    console.log(`Fetching categories with IDs: [${categoryIds.join(', ')}]`);
     
     const { data, error } = await supabase
       .from('categories')
@@ -296,39 +348,28 @@ app.get('/categories/by-ids', async (req, res) => {
             for (const diffLevel of difficulties) {
               console.log(`Fetching ${diffLevel.count} ${diffLevel.difficulty} questions for category ${category.id}`);
               
-              const { data: questions, error } = await supabase
+              const { data: questions } = await supabase
                 .from('questions')
                 .select('*')
                 .eq('category', category.id)
-                .eq('difficulty', diffLevel.difficulty)
-                .limit(diffLevel.count * 3) // Get more than needed to allow for random selection
-                .order('id', { ascending: false }); // Random-ish order
+                .eq('difficulty', diffLevel.difficulty);
 
-              if (error) {
-                console.error(`Error fetching ${diffLevel.difficulty} questions for category ${category.id}:`, error);
-                continue;
-              }
+              const selectedQuestions = questions
+                .sort(() => Math.random() - 0.5)
+                .slice(0, diffLevel.count);
 
-              if (questions && questions.length > 0) {
-                // Randomly select the required number of questions
-                const shuffled = questions.sort(() => Math.random() - 0.5);
-                const selectedQuestions = shuffled.slice(0, diffLevel.count);
-                
-                // Transform database format to match API format
-                const transformedQuestions = selectedQuestions.map(q => ({
-                  question: q.title,
-                  correct_answer: q.correct,
-                  incorrect_answers: [q.incorrect1, q.incorrect2, q.incorrect3].filter(ans => ans && ans.trim() !== ''),
-                  difficulty: q.difficulty,
-                  category: category.title,
-                  type: q.type || 'multiple'
-                }));
+              // Transform database format to match API format
+              const transformedQuestions = selectedQuestions.map(q => ({
+                question: q.title,
+                correct_answer: q.correct,
+                incorrect_answers: [q.incorrect1, q.incorrect2, q.incorrect3].filter(ans => ans && ans.trim() !== ''),
+                difficulty: q.difficulty,
+                category: category.title,
+                type: q.type || 'multiple'
+              }));
 
-                category.questions.push(...transformedQuestions);
-                console.log(`✅ Successfully fetched ${selectedQuestions.length} ${diffLevel.difficulty} questions for ${category.title}`);
-              } else {
-                console.warn(`⚠️  No ${diffLevel.difficulty} questions found for category ${category.id}`);
-              }
+              category.questions.push(...transformedQuestions);
+              console.log(`✅ Successfully fetched ${selectedQuestions.length} ${diffLevel.difficulty} questions for ${category.title}`);
             }
 
             console.log(`Total custom questions fetched for ${category.title}: ${category.questions.length}`);
