@@ -20,6 +20,15 @@ const GameSetup = ({ onGameStart }) => {
 
   // console.log(selectedCategories, teamNames, language);
 
+  // Fisher-Yates shuffle function
+  function randomizeArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)); // Random index between 0 and i
+      [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
+    }
+    return arr;
+  }
+
   // Fetch categories from API on component mount
   useEffect(() => {
     const fetchCategories = async () => {
@@ -45,7 +54,9 @@ const GameSetup = ({ onGameStart }) => {
               lang: cat.lang || "en",
             }));
 
-          setCategories(mappedCategories);
+            const randomizedCategories = randomizeArray(mappedCategories);
+
+          setCategories(randomizedCategories);
         } else {
           throw new Error("Invalid response format");
         }

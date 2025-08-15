@@ -7,7 +7,7 @@ const initialQuestion = {
   correct_answer: "Leonardo da Vinci",
   incorrect_answers: ["Michelangelo", "Raphael", "Donatello"],
   category: "Art",
-  type: "qa",
+  type: "emoji",
   value: 200,
 };
 

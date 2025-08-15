@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import "./admin.css";
 
 // Minimal Admin page: 4-digit OTP auth, Full Dump console logging, Logout.
 const API_BASE = "http://localhost:3001";
@@ -11,6 +12,22 @@ export default function AdminDashboard() {
   const [otpError, setOtpError] = useState("");
   const [dumpLoading, setDumpLoading] = useState(false);
   const inputsRef = useRef([]);
+  const [data, setData] = useState(null);
+
+  const individualCodes = () => {
+    const codes = data?.referal_usage?.data.map((entry) => entry.code) || [];
+    const uniqueCodes = [...new Set(codes)];
+    const codeCounts = codes.reduce((acc, code) => {
+      acc[code] = (acc[code] || 0) + 1;
+      return acc;
+    }, {});
+    console.log("Unique Codes:", uniqueCodes);
+    console.log("Code Counts:", codeCounts);
+  };
+
+  
+
+  console.log(individualCodes());
 
   const handleDigitChange = (i, val) => {
     if (!/^[0-9]?$/.test(val)) return; // only digit or empty
@@ -56,6 +73,7 @@ export default function AdminDashboard() {
       const resp = await fetch(`${API_BASE}/admin/full-dump`);
       if (!resp.ok) throw new Error("full-dump failed");
       const dump = await resp.json();
+      setData(dump);
       console.log("[ADMIN] Full dump:", dump);
     } catch (err) {
       console.log("[ADMIN] Full dump error:", err.message || err);
@@ -122,6 +140,50 @@ export default function AdminDashboard() {
         <button onClick={handleLogout} style={styles.logoutButton}>
           Logout
         </button>
+      </div>
+
+      <div>
+        <h1>Welcome 5o5a Admin</h1>
+
+        <div className="row">
+          <div className="value">
+            <h3 className="value-title">Referal Codes</h3>
+            <h1 className="value-count">
+              {data ? JSON.stringify(data?.referal?.count) : "X"}
+            </h1>
+          </div>
+
+          <div className="value">
+            <h3 className="value-title">Total Referal Usage</h3>
+            <h1 className="value-count">
+              {data ? JSON.stringify(data?.referal_usage?.count) : "X"}
+            </h1>
+          </div>
+
+          <div className="value">
+            <h3 className="value-title">Total Referal Usage</h3>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="value">
+            <h3 className="value-title">Total Categories</h3>
+            <h1 className="value-count">
+              {data ? JSON.stringify(data?.categories?.count) : "X"}
+            </h1>
+          </div>
+
+          <div className="value">
+            <h3 className="value-title">Total Categories</h3>
+            <h1 className="value-count">
+              {data ? JSON.stringify(data?.categories?.count) : "X"}
+            </h1>
+          </div>
+        </div>
+
+        <p>
+          {data ? JSON.stringify(data?.categories?.count) : "No data available"}
+        </p>
       </div>
     </div>
   );

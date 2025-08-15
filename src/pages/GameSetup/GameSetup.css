@@ -116,6 +116,10 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 90px;
+  max-width: 200px;
+  min-height: 100px;
+  max-height: 200px;
 }
 
 .category-card:hover {

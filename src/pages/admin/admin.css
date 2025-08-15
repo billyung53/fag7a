@@ -1,0 +1,38 @@
+.row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.value {
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 200px;
+    max-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.value-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.4;
+    max-height: 2.8em; /* Approx 2 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.value-count {
+    font-size: 2.9rem;
+    font-weight: 700;
+    text-align: right;
+    margin: 0 10px 0 0;
+}

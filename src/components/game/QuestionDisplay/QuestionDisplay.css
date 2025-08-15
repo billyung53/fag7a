@@ -13,3 +13,4 @@
 .result-section { margin-top: 30px; }
 .correct-msg { color: #2ecc71; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; }
 .incorrect-msg { color: #e74c3c; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; }
+.emoji { font-size: 2rem; }

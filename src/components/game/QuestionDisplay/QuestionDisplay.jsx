@@ -14,6 +14,9 @@ export default function QuestionDisplay({
   const type = (currentQuestion.type || "").toLowerCase();
   const isQA = type === "qa";
   const isMCQ = type === "mcq" || type === "multiple" || !type; // default to MCQ if type missing
+  const isEmoji = type === "emoji";
+
+  console.log("Question:", currentQuestion);
 
   // Debug log (non-blocking)
   // console.log("Question:", currentQuestion);
@@ -23,6 +26,9 @@ export default function QuestionDisplay({
       <div className="question-header">{/* Timer handled externally */}</div>
       <div className="question-text">
         <h3>{currentQuestion.question}</h3>
+        {isEmoji && (
+          <div className="emoji">{currentQuestion.incorrect_answers?.[0]}</div>
+        )}
       </div>
 
       {isMCQ && (
@@ -50,6 +56,53 @@ export default function QuestionDisplay({
               </button>
             );
           })}
+        </div>
+      )}
+
+      {isEmoji && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "18px",
+            alignItems: "center",
+          }}
+        >
+          {!showAnswer && !showResult && (
+            <button
+              className="answer-btn"
+              onClick={() => setShowAnswer(true)}
+              disabled={showResult}
+            >
+              Show Answer
+            </button>
+          )}
+          {showAnswer && (
+            <div
+              className="answers-grid"
+              style={{ gridTemplateColumns: "1fr" }}
+            >
+              <div className="answer-btn correct" style={{ cursor: "default" }}>
+                {currentQuestion.correct_answer}
+              </div>
+            </div>
+          )}
+          {showAnswer && !showResult && (
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button
+                className="answer-btn"
+                onClick={() => onAnswerClick(currentQuestion.correct_answer)}
+              >
+                Correct
+              </button>
+              <button
+                className="answer-btn"
+                onClick={() => onAnswerClick("__incorrect__")}
+              >
+                Incorrect
+              </button>
+            </div>
+          )}
         </div>
       )}
 
